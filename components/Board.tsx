@@ -130,6 +130,7 @@ function Board() {
 									JSON.stringify(cells)
 								);
 								const value = newCells[y][x].value;
+								if (value === 0) return;
 
 								for (let ypos = 0; ypos < rows; ypos++) {
 									for (let xpos = 0; xpos < cols; xpos++) {
