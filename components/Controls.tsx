@@ -16,7 +16,7 @@ function Controls(props: ControlsProps) {
 		<div className="flex flex-row justify-between w-controls-sm h-controls-sm border-2 border-black md:w-controls-lg md:h-controls-lg md:flex-col">
 			<div className="w-auto h-full flex flex-col justify-between md:w-full md:h-auto md:flex-row">
 				<SmallControl>
-					<svg viewBox="0 0 24 24">
+					<svg viewBox="0 0 24 24" className="w-full h-full">
 						<path
 							fill="currentColor"
 							d="M 22.847656 14.796875 L 20.851562 13.644531 C 21.050781 12.558594 21.050781 11.441406 20.851562 10.355469 L 22.847656 9.203125 C 23.078125 9.070312 23.179688 8.796875 23.105469 8.546875 C 22.585938 6.875 21.699219 5.367188 20.539062 4.109375 C 20.363281 3.917969 20.070312 3.871094 19.847656 4.003906 L 17.851562 5.15625 C 17.011719 4.433594 16.046875 3.875 15 3.511719 L 15 1.210938 C 15 0.945312 14.816406 0.71875 14.558594 0.660156 C 12.839844 0.277344 11.078125 0.296875 9.441406 0.660156 C 9.183594 0.71875 9 0.945312 9 1.210938 L 9 3.515625 C 7.960938 3.886719 6.992188 4.445312 6.148438 5.160156 L 4.15625 4.007812 C 3.929688 3.875 3.640625 3.917969 3.464844 4.117188 C 2.304688 5.367188 1.421875 6.875 0.898438 8.550781 C 0.820312 8.804688 0.929688 9.074219 1.15625 9.207031 L 3.15625 10.359375 C 2.953125 11.445312 2.953125 12.5625 3.15625 13.648438 L 1.15625 14.804688 C 0.929688 14.933594 0.824219 15.207031 0.898438 15.460938 C 1.421875 17.128906 2.304688 18.636719 3.464844 19.894531 C 3.640625 20.085938 3.933594 20.132812 4.15625 20 L 6.15625 18.847656 C 6.992188 19.570312 7.960938 20.128906 9.003906 20.492188 L 9.003906 22.800781 C 9.003906 23.0625 9.1875 23.292969 9.445312 23.347656 C 11.164062 23.734375 12.929688 23.714844 14.5625 23.347656 C 14.820312 23.292969 15.003906 23.0625 15.003906 22.800781 L 15.003906 20.492188 C 16.046875 20.125 17.011719 19.566406 17.855469 18.847656 L 19.851562 20 C 20.082031 20.132812 20.367188 20.089844 20.546875 19.894531 C 21.703125 18.640625 22.589844 17.132812 23.109375 15.460938 C 23.179688 15.203125 23.078125 14.929688 22.847656 14.796875 Z M 12 15.75 C 9.933594 15.75 8.25 14.066406 8.25 12 C 8.25 9.933594 9.933594 8.25 12 8.25 C 14.066406 8.25 15.75 9.933594 15.75 12 C 15.75 14.066406 14.066406 15.75 12 15.75 Z M 12 15.75 "
@@ -37,14 +37,22 @@ function Controls(props: ControlsProps) {
 						});
 					}}
 				>
-					<svg viewBox="0 0 24 24" id="go-full" className="visible">
+					<svg
+						viewBox="0 0 24 24"
+						id="go-full"
+						className="w-full h-full visible"
+					>
 						<path fill="none" d="M0 0h24v24H0V0z"></path>
 						<path
 							fill="currentColor"
 							d="M6 14c-.55 0-1 .45-1 1v3c0 .55.45 1 1 1h3c.55 0 1-.45 1-1s-.45-1-1-1H7v-2c0-.55-.45-1-1-1zm0-4c.55 0 1-.45 1-1V7h2c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1v3c0 .55.45 1 1 1zm11 7h-2c-.55 0-1 .45-1 1s.45 1 1 1h3c.55 0 1-.45 1-1v-3c0-.55-.45-1-1-1s-1 .45-1 1v2zM14 6c0 .55.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1V6c0-.55-.45-1-1-1h-3c-.55 0-1 .45-1 1z"
 						></path>
 					</svg>
-					<svg viewBox="0 0 24 24" id="leave-full" className="hidden">
+					<svg
+						viewBox="0 0 24 24"
+						id="leave-full"
+						className="w-full h-full hidden"
+					>
 						<path fill="none" d="M0 0h24v24H0V0z"></path>
 						<path
 							fill="currentColor"
@@ -53,7 +61,7 @@ function Controls(props: ControlsProps) {
 					</svg>
 				</SmallControl>
 				<SmallControl>
-					<svg viewBox="0 0 24 24">
+					<svg viewBox="0 0 24 24" className="w-full h-full">
 						<path fill="none" d="M0 0h24v24H0V0z"></path>
 						<path
 							fill="currentColor"
@@ -62,7 +70,7 @@ function Controls(props: ControlsProps) {
 					</svg>
 				</SmallControl>
 				<SmallControl>
-					<svg viewBox="0 0 24 24">
+					<svg viewBox="0 0 24 24" className="w-full h-full">
 						<path fill="none" d="M0 0h24v24H0V0z"></path>
 						<path
 							fill="currentColor"
@@ -71,7 +79,7 @@ function Controls(props: ControlsProps) {
 					</svg>
 				</SmallControl>
 				<SmallControl>
-					<svg viewBox="0 0 24 24">
+					<svg viewBox="0 0 24 24" className="w-full h-full">
 						<mask id="cutout">
 							<rect width="100%" height="100%" fill="#fff"></rect>
 							<path
