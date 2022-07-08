@@ -15,16 +15,26 @@ export interface Puzzle {
 }
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-	function loadJSON(filePath: string) {
-		const absolutePath = path.join(process.cwd(), filePath);
-		const fileData = fs.readFileSync(absolutePath) as unknown as string;
-		return JSON.parse(fileData);
-	}
-
 	if (admin.apps.length === 0) {
+		console.log();
 		admin.initializeApp({
-			credential: admin.credential.cert(loadJSON("admin.json")),
-			databaseURL: "https://sudoku-dec29.firebaseio.com",
+			credential: admin.credential.cert({
+				type: process.env.FIREBASE_TYPE,
+				project_id: process.env.FIREBASE_PROJECT_ID,
+				private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
+				private_key: (process.env.FIREBASE_PRIVATE_KEY as any).replace(
+					/\\n/g,
+					"\n"
+				),
+				client_email: process.env.FIREBASE_CLIENT_EMAIL,
+				client_id: process.env.FIREBASE_CLIENT_ID,
+				auth_uri: process.env.FIREBASE_AUTH_URI,
+				token_uri: process.env.FIREBASE_TOKEN_URI,
+				auth_provider_x509_cert_url:
+					process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
+				client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_CERT_URL,
+			} as any),
+			databaseURL: process.env.FIREBASE_DATABASE_URL,
 		});
 	}
 
