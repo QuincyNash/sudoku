@@ -25,10 +25,11 @@ function getBorderWidth(props: CellProps) {
 interface CellProps {
 	index: number;
 	selected: boolean;
+	given: boolean;
 	dragging: boolean;
+	isActive: boolean;
 	shifted: boolean;
 	value: number;
-	onKey: (key: number) => void;
 	onClick: (_x?: number, _y?: number, arrow?: boolean) => void;
 	onDoubleClick: () => void;
 	onDrag: () => void;
@@ -46,81 +47,40 @@ function Cell(props: CellProps) {
 
 	return (
 		<button
-			className={`cell border border-primary-800 bg-secondary-100 transition-colors outline-none ${
-				props.selected ? "bg-opacity-30" : "bg-opacity-0"
-			}`}
+			className={`cell relative flex justify-center items-center border border-primary-800 bg-secondary-100 transition-colors outline-none ${
+				props.selected
+					? props.isActive
+						? "bg-opacity-70 dark:bg-opacity-50"
+						: "bg-opacity-40 dark:bg-opacity-30"
+					: "bg-opacity-0"
+			} dark:border-slate-500`}
 			style={{
 				borderWidth: getBorderWidth(props),
 			}}
 			onMouseDown={() => props.onClick()}
-			onMouseEnter={() => {
-				if (props.shifted && props.dragging) {
-					props.onDrag();
-				}
-			}}
-			onMouseMove={() => {
-				if (props.dragging && !props.shifted) {
-					props.onDrag();
-				}
-			}}
 			onDoubleClick={props.onDoubleClick}
-			onKeyDown={(e) => {
-				e.preventDefault();
-				if (e.repeat) return;
-
-				if (e.key === "Enter") {
-					props.onClick();
-				} else if (e.key === "Escape") {
-					props.onDoubleClick();
-				} else if (!isNaN(parseInt(e.key)) && parseInt(e.key) !== 0) {
-					props.onKey(parseInt(e.key));
-				} else if (e.key === "Backspace") {
-					props.onKey(0);
-				} else if (e.key === "ArrowLeft") {
-					let newX = (x - 1 + props.cols) % props.cols;
-
-					(
-						document.querySelectorAll(".cell")[
-							y * props.cols + newX
-						] as HTMLButtonElement
-					).focus();
-
-					props.onClick(newX, y);
-				} else if (e.key === "ArrowRight") {
-					let newX = (x + 1) % props.cols;
-
-					(
-						document.querySelectorAll(".cell")[
-							y * props.cols + newX
-						] as HTMLButtonElement
-					).focus();
-
-					props.onClick(newX, y);
-				} else if (e.key === "ArrowUp") {
-					let newY = (y - 1 + props.cols) % props.cols;
-
-					(
-						document.querySelectorAll(".cell")[
-							newY * props.cols + x
-						] as HTMLButtonElement
-					).focus();
-
-					props.onClick(x, newY);
-				} else if (e.key === "ArrowDown") {
-					let newY = (y + 1) % props.cols;
-
-					(
-						document.querySelectorAll(".cell")[
-							newY * props.cols + x
-						] as HTMLButtonElement
-					).focus();
-
-					props.onClick(x, newY);
-				}
-			}}
 		>
-			<span className="w-full h-full flex justify-center items-center text-primary-900 text-[4vh] font-sudoku select-none md:text-[min(4vw,6vh)]">
-				{props.value === 0 ? "" : props.value}
+			<div
+				className="absolute w-5/6 h-5/6"
+				onMouseEnter={() => {
+					if (props.dragging && props.shifted) {
+						props.onDrag();
+					}
+				}}
+				onMouseMove={() => {
+					if (props.dragging && !props.shifted) {
+						props.onDrag();
+					}
+				}}
+			></div>
+			<span
+				className={`w-full h-full flex justify-center items-center text-[4vh] font-sudoku select-none transition-colors md:text-[min(4vw,6vh)] ${
+					props.given
+						? "text-secondary-900 dark:text-slate-400"
+						: "text-primary-500 dark:text-primary-400"
+				}`}
+			>
+				{props.value === 10 ? "" : props.value}
 			</span>
 		</button>
 	);

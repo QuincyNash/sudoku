@@ -7,3 +7,10 @@ body {
 	font-family: Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
 		Helvetica Neue, sans-serif;
 }
+
+:root {
+	--controls-sm-width: min(50vh, 80vw);
+	--controls-sm-height: min(25vh, 40vw);
+	--controls-lg-width: min(50vh, 30vw);
+	--controls-lg-height: min(75vh, 45vw);
+}

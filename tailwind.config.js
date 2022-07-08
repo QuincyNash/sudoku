@@ -4,18 +4,20 @@ module.exports = {
 		"./pages/**/*.{js,ts,jsx,tsx}",
 		"./components/**/*.{js,ts,jsx,tsx}",
 	],
-	safelist: [
-		"hidden",
-		"visible",
-		"bg-opacity-0",
-		"bg-opacity-30",
-		"outline-[#FF0000]",
-		{
-			pattern: /bg-(primary|secondary)-.+/,
-		},
-	],
+	darkMode: "class",
 	theme: {
 		extend: {
+			screens: {
+				md: "725px",
+			},
+			width: {
+				"controls-sm": "var(--controls-sm-width)",
+				"controls-lg": "var(--controls-lg-width)",
+			},
+			height: {
+				"controls-sm": "var(--controls-sm-height)",
+				"controls-lg": "var(--controls-lg-height)",
+			},
 			colors: {
 				primary: {
 					100: "#24FF62",
@@ -41,6 +43,16 @@ module.exports = {
 				},
 			},
 			fontFamily: {
+				primary: [
+					"Roboto",
+					"Oxygen",
+					"Ubuntu",
+					"Cantarell",
+					"Fira Sans",
+					"Droid Sans",
+					"Helvetica Neue",
+					"sans-serif",
+				],
 				sudoku: ["Tahoma", "Verdana", "sans-serif"],
 			},
 		},

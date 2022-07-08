@@ -2,7 +2,19 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-	reactStrictMode: true,
+	reactStrictMode: false,
 };
 
-module.exports = { nextConfig };
+module.exports = {
+	nextConfig,
+
+	async redirects() {
+		return [
+			{
+				source: "/play",
+				destination: "/api/random",
+				permanent: true,
+			},
+		];
+	},
+};
