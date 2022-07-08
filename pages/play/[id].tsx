@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import admin from "firebase-admin";
-import fs from "fs";
-import path from "path";
 import Header from "../../components/Header";
 import Board from "../../components/Game";
+import initApp from "../../lib/firebase";
+import { useRouter } from "next/router";
 
 export interface Puzzle {
 	rows: number;
@@ -15,46 +15,22 @@ export interface Puzzle {
 }
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-	if (admin.apps.length === 0) {
-		console.log();
-		admin.initializeApp({
-			credential: admin.credential.cert({
-				type: "service_account",
-				project_id: process.env.FIREBASE_PROJECT_ID,
-				private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
-				private_key: (process.env.FIREBASE_PRIVATE_KEY as any).replace(
-					/\\n/g,
-					"\n"
-				),
-				client_email: process.env.FIREBASE_CLIENT_EMAIL,
-				client_id: process.env.FIREBASE_CLIENT_ID,
-				auth_uri: "https://accounts.google.com/o/oauth2/auth",
-				token_uri: "https://oauth2.googleapis.com/token",
-				auth_provider_x509_cert_url:
-					"https://www.googleapis.com/oauth2/v1/certs",
-				client_x509_cert_url:
-					"https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-cipfz%40sudoku-dec29.iam.gserviceaccount.com",
-			} as any),
-			databaseURL: process.env.FIREBASE_DATABASE_URL,
-		});
-	}
+	initApp();
+	const db = admin.firestore();
 
 	const id = ctx.params?.id;
 
-	const db = admin.firestore();
 	const ref = db.doc(`puzzles/${id}`);
 	const data = (await ref.get()).data() as Puzzle;
 
 	if (!data) {
 		return {
 			redirect: {
-				destination: "/play",
+				destination: "/api/random",
 				permanent: true,
 			},
 		};
 	}
-
-	console.log("STATIC PROPS");
 
 	return {
 		props: {
@@ -68,15 +44,26 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-	console.log("STATIC PATHS");
+	initApp();
+	const db = admin.firestore();
+
+	const paths: string[] = [];
+
+	const collection = await db.collection("puzzles").get();
+	collection.forEach((doc) => {
+		paths.push(`/play/${doc.id}`);
+	});
+
 	return {
-		paths: ["/play/1"],
+		paths,
 		fallback: true,
 	};
 };
 
 function Play(props: Puzzle) {
 	const [isPaused, setIsPaused] = useState(false);
+
+	if (!props.board) return null;
 
 	return (
 		<div className="w-screen h-screen flex flex-col transition-colors dark:bg-slate-900">
