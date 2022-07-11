@@ -1,18 +1,19 @@
 interface NumControlProps {
 	num?: number;
 	isDelete?: boolean;
+	leftGap?: boolean;
 	onClick: () => void;
 }
 
 function NumControl(props: NumControlProps) {
 	return (
 		<button
-			className={`w-full h-full ${
-				props.isDelete ? "col-span-2" : "col-span-1"
-			} flex justify-center items-center rounded-md bg-primary-500 dark:bg-primary-700 bg-opacity-100 border border-primary-400 dark:border-primary-600 outline-none transition-colors hover:bg-opacity-90 dark:hover:bg-opacity-80`}
+			className={`h-full aspect-square ${
+				props.isDelete ? "col-span-2 w-full" : "col-span-1"
+			} flex-center rounded-md bg-primary-500 dark:bg-primary-700 bg-opacity-100 border border-primary-400 dark:border-primary-600 outline-none transition-colors hover:bg-opacity-90 dark:hover:bg-opacity-80`}
 			onClick={props.onClick}
 		>
-			<span className="w-full h-full flex justify-center items-center text-white text-[5vh] font-primary select-none transition-colors md:text-[min(4vw,10vh)] dark:text-slate-300">
+			<span className="w-full h-full flex-center text-white text-[5vh] font-primary select-none transition-colors md:text-[min(4vw,10vh)] dark:text-slate-300">
 				<IconOrText {...props}></IconOrText>
 			</span>
 		</button>

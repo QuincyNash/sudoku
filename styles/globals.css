@@ -8,9 +8,22 @@ body {
 		Helvetica Neue, sans-serif;
 }
 
+svg {
+	width: 100%;
+	height: 100%;
+}
+
 :root {
-	--controls-sm-width: min(50vh, 80vw);
-	--controls-sm-height: min(25vh, 40vw);
+	--controls-sm-width: min(54.5vh, 70vw);
+	--controls-sm-height: min(35vh, 45vw);
 	--controls-lg-width: min(50vh, 30vw);
 	--controls-lg-height: min(75vh, 45vw);
+	--grid-sm-width: min(52vh, 85vw);
+	--grid-lg-width: min(60vw, 82vh);
+}
+
+.flex-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

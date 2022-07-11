@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import admin from "firebase-admin";
 import Header from "../../components/Header";
-import Board from "../../components/Game";
+import Game from "../../components/Game";
 import initApp from "../../lib/firebase";
 import { useRouter } from "next/router";
 
@@ -73,13 +73,13 @@ function Play(props: Puzzle) {
 				}}
 				paused={isPaused}
 			></Header>
-			<Board
+			<Game
 				rows={props.rows}
 				cols={props.cols}
 				rowBlock={props.rowBlock}
 				colBlock={props.colBlock}
 				board={props.board}
-			></Board>
+			></Game>
 		</div>
 	);
 }

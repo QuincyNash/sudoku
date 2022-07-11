@@ -3,16 +3,25 @@ import { Puzzle } from "../pages/play/[id]";
 import Cell from "./Cell";
 import Controls from "./Controls";
 
-let activeX = 0;
-let activeY = 0;
+let activeX = NaN;
+let activeY = NaN;
 
 interface CellObject {
 	selected: boolean;
 	given: boolean;
 	value: number;
+	corners: number[];
+	center: number[];
+	color: number;
 }
 
-function Board(props: Puzzle) {
+interface GameState {
+	cells: CellObject[][];
+	activeX: number;
+	activeY: number;
+}
+
+function Game(props: Puzzle) {
 	const _cells: CellObject[][] = [];
 
 	const { cols, rows, board, colBlock, rowBlock } = props;
@@ -25,15 +34,56 @@ function Board(props: Puzzle) {
 				selected: false,
 				given: cell !== 0,
 				value: cell === 0 ? 10 : cell,
+				corners: [],
+				center: [],
+				color: NaN,
 			});
 		}
 		_cells.push(row);
 	}
 
 	const [cells, setCells] = useState(_cells);
+	const [cellStates, setCellStates] = useState([_cells]);
+	const [stateIndex, setStateIndex] = useState(0);
+
 	const [tool, setTool] = useState("color");
 	const [dragging, setDragging] = useState(false);
 	const [shifted, setShifted] = useState(false);
+	const [shiftLock, setShiftLock] = useState(false);
+
+	const isShifted = useCallback(() => {
+		return shifted || shiftLock;
+	}, [shiftLock, shifted]);
+
+	const saveCells = useCallback(
+		(newCells: CellObject[][]) => {
+			let newCellStates: CellObject[][][] = JSON.parse(
+				JSON.stringify(cellStates)
+			);
+
+			newCellStates[stateIndex + 1] = newCells;
+			newCellStates = newCellStates.slice(0, stateIndex + 2);
+
+			setCells(newCells);
+			setCellStates(newCellStates);
+			setStateIndex(stateIndex + 1);
+		},
+		[cellStates, stateIndex]
+	);
+
+	const undo = useCallback(() => {
+		if (stateIndex > 0) {
+			setStateIndex(stateIndex - 1);
+			setCells(cellStates[stateIndex - 1]);
+		}
+	}, [cellStates, stateIndex]);
+
+	const redo = useCallback(() => {
+		if (stateIndex < cellStates.length - 1) {
+			setStateIndex(stateIndex + 1);
+			setCells(cellStates[stateIndex + 1]);
+		}
+	}, [cellStates, stateIndex]);
 
 	const onCellClick = useCallback(
 		(_x: number, _y: number, arrow = false) => {
@@ -51,7 +101,7 @@ function Board(props: Puzzle) {
 			for (let ypos = 0; ypos < rows; ypos++) {
 				for (let xpos = 0; xpos < cols; xpos++) {
 					if (xpos === _x && ypos === _y) {
-						if (selectedCount === 1 || (shifted && !arrow)) {
+						if (selectedCount === 1 || (isShifted() && !arrow)) {
 							newCells[_y][_x].selected = !newCells[_y][_x].selected;
 						} else {
 							newCells[_y][_x].selected = true;
@@ -59,7 +109,7 @@ function Board(props: Puzzle) {
 
 						activeX = _x;
 						activeY = _y;
-					} else if (!shifted) {
+					} else if (!isShifted()) {
 						newCells[ypos][xpos].selected = false;
 					}
 				}
@@ -67,7 +117,7 @@ function Board(props: Puzzle) {
 
 			setCells(newCells);
 		},
-		[dragging, cells, rows, cols, shifted]
+		[dragging, cells, rows, cols, isShifted]
 	);
 
 	const enterNumber = useCallback(
@@ -81,10 +131,10 @@ function Board(props: Puzzle) {
 						}
 					}
 				}
-				setCells(newCells);
+				saveCells(newCells);
 			}
 		},
-		[cells, cols, rows]
+		[cells, cols, rows, saveCells]
 	);
 
 	useEffect(() => {
@@ -104,6 +154,8 @@ function Board(props: Puzzle) {
 						newCells[y][x].selected = false;
 					}
 				}
+				activeX = NaN;
+				activeY = NaN;
 
 				setCells(newCells);
 			}
@@ -111,7 +163,7 @@ function Board(props: Puzzle) {
 		};
 
 		const keyUp = (e: React.KeyboardEvent) => {
-			if (e.key == "Alt" && !e.repeat && !dragging) {
+			if (e.key == "Shift" && !e.repeat && !dragging) {
 				setShifted(false);
 			}
 		};
@@ -133,8 +185,28 @@ function Board(props: Puzzle) {
 			}
 
 			if (e.repeat) return;
-			if (e.key === "Alt" && !dragging) {
+			if (e.key === "Shift" && !dragging) {
 				setShifted(true);
+			}
+
+			if (e.key === "z" && (e.ctrlKey || e.metaKey)) {
+				if (e.shiftKey) {
+					redo();
+				} else {
+					undo();
+				}
+			}
+
+			if (e.key === "a" && (e.ctrlKey || e.metaKey)) {
+				e.preventDefault();
+
+				let newCells: CellObject[][] = JSON.parse(JSON.stringify(cells));
+				for (let y = 0; y < rows; y++) {
+					for (let x = 0; x < cols; x++) {
+						newCells[y][x].selected = true;
+					}
+				}
+				setCells(newCells);
 			}
 
 			if (e.key === " ") {
@@ -183,11 +255,22 @@ function Board(props: Puzzle) {
 			document.removeEventListener("keydown", keyDown as any);
 			document.removeEventListener("keyup", keyUp as any);
 		};
-	}, [cells, cols, dragging, enterNumber, onCellClick, rows, shifted, tool]);
+	}, [
+		cells,
+		cols,
+		dragging,
+		enterNumber,
+		onCellClick,
+		redo,
+		rows,
+		shifted,
+		tool,
+		undo,
+	]);
 
 	return (
 		<main className="w-full h-full flex flex-col justify-center items-center gap-[min(6vw,4vh)] md:gap-[3vw] md:flex-row">
-			<div className="relative w-[min(52vh,85vw)] aspect-square border-[3px] border-primary-800 md:w-[min(60%,82vh)] transition-colors dark:border-slate-500">
+			<div className="relative w-grid-sm aspect-square border-[3px] border-primary-800 md:w-grid-lg transition-colors dark:border-slate-500">
 				<div
 					className="absolute inset-0 grid"
 					style={{
@@ -203,11 +286,33 @@ function Board(props: Puzzle) {
 								key={i}
 								index={i}
 								selected={cells[y][x].selected}
+								sides={{
+									top: y > 0 ? cells[y - 1][x].selected : false,
+									bottom: y < rows - 1 ? cells[y + 1][x].selected : false,
+									left: x > 0 ? cells[y][x - 1].selected : false,
+									right: x < cols - 1 ? cells[y][x + 1].selected : false,
+									topLeft:
+										x > 0 && y > 0 ? cells[y - 1][x - 1].selected : false,
+									topRight:
+										x < cols - 1 && y > 0
+											? cells[y - 1][x + 1].selected
+											: false,
+									bottomLeft:
+										x > 0 && y < rows - 1
+											? cells[y + 1][x - 1].selected
+											: false,
+									bottomRight:
+										x < cols - 1 && y < rows - 1
+											? cells[y + 1][x + 1].selected
+											: false,
+								}}
 								given={cells[y][x].given}
 								value={cells[y][x].value}
-								isActive={activeX === x && activeY === y}
+								corners={cells[y][x].corners}
+								center={cells[y][x].center}
+								color={cells[y][x].color}
 								dragging={dragging}
-								shifted={shifted}
+								shifted={isShifted()}
 								onClick={() => onCellClick(x, y)}
 								onDoubleClick={() => {
 									let newCells: CellObject[][] = JSON.parse(
@@ -216,6 +321,17 @@ function Board(props: Puzzle) {
 
 									const value = newCells[y][x].value;
 									if (value === 10) return;
+
+									let count = 0;
+									for (let ypos = 0; ypos < rows; ypos++) {
+										for (let xpos = 0; xpos < cols; xpos++) {
+											if (newCells[ypos][xpos].value === value) {
+												count += 1;
+											}
+										}
+									}
+
+									if (count === 1) return;
 
 									for (let ypos = 0; ypos < rows; ypos++) {
 										for (let xpos = 0; xpos < cols; xpos++) {
@@ -238,7 +354,7 @@ function Board(props: Puzzle) {
 									activeX = x;
 									activeY = y;
 
-									newCells[y][x].selected = shifted
+									newCells[y][x].selected = isShifted()
 										? !newCells[y][x].selected
 										: true;
 									setCells(newCells);
@@ -253,12 +369,16 @@ function Board(props: Puzzle) {
 				</div>
 			</div>
 			<Controls
+				shiftLock={shiftLock}
 				enterNumber={enterNumber}
 				changeTool={setTool}
+				toggleShiftLock={() => setShiftLock(!shiftLock)}
+				undo={undo}
+				redo={redo}
 				tool={tool}
 			></Controls>
 		</main>
 	);
 }
 
-export default Board;
+export default Game;

@@ -8,11 +8,15 @@ module.exports = {
 	theme: {
 		extend: {
 			screens: {
-				md: "725px",
+				md: {
+					raw: "(min-width: 725px), (orientation: landscape)",
+				},
 			},
 			width: {
 				"controls-sm": "var(--controls-sm-width)",
 				"controls-lg": "var(--controls-lg-width)",
+				"grid-sm": "var(--grid-sm-width)",
+				"grid-lg": "var(--grid-lg-width)",
 			},
 			height: {
 				"controls-sm": "var(--controls-sm-height)",
@@ -57,5 +61,6 @@ module.exports = {
 			},
 		},
 	},
+	safelist: ["order-1", "order-2"],
 	plugins: [],
 };
