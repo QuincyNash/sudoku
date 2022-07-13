@@ -8,7 +8,10 @@ interface HeaderProps {
 function Header(props: HeaderProps) {
 	return (
 		<div className="header sticky top-0 flex items-center w-full h-10 flex-shrink-0 bg-primary-400 transition-colors dark:bg-primary-600">
-			<button className="ml-4 text-primary-800 outline-none transition-colors dark:text-slate-200">
+			<button
+				aria-label="Menu"
+				className="ml-4 text-primary-800 outline-none transition-colors dark:text-slate-200"
+			>
 				<svg width="24" height="24">
 					<path d="M0 0h24v24H0V0z" fill="none"></path>
 					<path
@@ -26,6 +29,7 @@ function Header(props: HeaderProps) {
 				</label>
 				<button
 					onClick={props.onPauseToggle}
+					aria-label={props.paused ? "Unpause" : "Pause"}
 					id="toggle"
 					className="text-primary-900 outline-none transition-colors dark:text-slate-100"
 				>

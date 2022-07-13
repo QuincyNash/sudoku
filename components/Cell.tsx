@@ -87,6 +87,7 @@ function Cell(props: CellProps) {
 
 	return (
 		<button
+			aria-label={`Cell #${props.index + 1}`}
 			className="cell relative flex-center border border-primary-800  outline-none dark:border-slate-500"
 			style={{
 				borderWidth: getBorderWidth(props),

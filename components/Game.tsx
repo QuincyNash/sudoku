@@ -78,18 +78,20 @@ function Game(props: Puzzle) {
 
 	const saveCells = useCallback(
 		(newCells: CellObject[][]) => {
-			let newCellStates: CellObject[][][] = JSON.parse(
-				JSON.stringify(cellStates)
-			);
+			if (JSON.stringify(newCells) !== JSON.stringify(cells)) {
+				let newCellStates: CellObject[][][] = JSON.parse(
+					JSON.stringify(cellStates)
+				);
 
-			newCellStates[stateIndex + 1] = newCells;
-			newCellStates = newCellStates.slice(0, stateIndex + 2);
+				newCellStates[stateIndex + 1] = newCells;
+				newCellStates = newCellStates.slice(0, stateIndex + 2);
 
-			setCells(newCells);
-			setCellStates(newCellStates);
-			setStateIndex(stateIndex + 1);
+				setCells(newCells);
+				setCellStates(newCellStates);
+				setStateIndex(stateIndex + 1);
+			}
 		},
-		[cellStates, stateIndex]
+		[cellStates, cells, stateIndex]
 	);
 
 	const undo = useCallback(() => {
@@ -306,6 +308,8 @@ function Game(props: Puzzle) {
 				let newY = (activeY + 1) % cols;
 				onCellClick(activeX, newY, true);
 			}
+
+			if (e.key === "r" && (e.metaKey || e.ctrlKey)) return;
 
 			e.preventDefault();
 

@@ -1,19 +1,22 @@
 interface NumControlProps {
 	num?: number;
 	isDelete?: boolean;
-	leftGap?: boolean;
+	tool: string;
 	onClick: () => void;
 }
 
 function NumControl(props: NumControlProps) {
 	return (
 		<button
+			aria-label={
+				typeof props.num === "number" ? props.num.toString() : "Delete"
+			}
 			className={`h-full aspect-square ${
 				props.isDelete ? "col-span-2 w-full" : "col-span-1"
 			} flex-center rounded-md bg-primary-500 dark:bg-primary-700 bg-opacity-100 border border-primary-400 dark:border-primary-600 outline-none transition-colors hover:bg-opacity-90 dark:hover:bg-opacity-80`}
 			onClick={props.onClick}
 		>
-			<span className="w-full h-full flex-center text-white text-[5vh] font-primary select-none transition-colors md:text-[min(4vw,10vh)] dark:text-slate-300">
+			<span className="w-full h-full flex-center text-white  font-primary select-none transition-colors  dark:text-slate-300">
 				<IconOrText {...props}></IconOrText>
 			</span>
 		</button>
@@ -23,7 +26,7 @@ function NumControl(props: NumControlProps) {
 function IconOrText(props: NumControlProps) {
 	if (props.isDelete) {
 		return (
-			<div className="w-1/3 aspect-square">
+			<div className="w-[35%] aspect-square">
 				<svg viewBox="0 0 24 24">
 					<path fill="none" d="M0 0h24v24H0V0z"></path>
 					<path
@@ -33,8 +36,34 @@ function IconOrText(props: NumControlProps) {
 				</svg>
 			</div>
 		);
+	} else if (props.tool === "center") {
+		return (
+			<span className="text-[max(calc(var(--controls-sm-width)*0.06),0px)] md:text-[max(calc(var(--controls-lg-height)*0.06),0px)]">
+				{props.num}
+			</span>
+		);
+	} else if (props.tool === "corner") {
+		let spacing = "";
+		if (props.num === 1 || props.num === 4 || props.num === 7) {
+			spacing = "mr-auto ml-[calc(var(--controls-sm-width)*0.015)]";
+		} else if (props.num === 3 || props.num === 6 || props.num === 9) {
+			spacing =
+				"ml-auto mr-[calc(var(--controls-sm-width)*0.015)] md:mr-[calc(var(--controls-lg-height)*0.015)]";
+		}
+
+		return (
+			<span
+				className={`text-[max(calc(var(--controls-sm-width)*0.06),0px)] md:text-[max(calc(var(--controls-lg-height)*0.06),0px)] ${spacing}`}
+			>
+				{props.num}
+			</span>
+		);
 	} else {
-		return <span>{props.num}</span>;
+		return (
+			<span className="font-medium text-[max(calc(var(--controls-sm-width)*0.08),0px)] md:text-[max(calc(var(--controls-lg-height)*0.08),0px)]">
+				{props.num}
+			</span>
+		);
 	}
 }
 

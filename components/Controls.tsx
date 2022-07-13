@@ -20,7 +20,7 @@ function Controls(props: ControlsProps) {
 	return (
 		<div className="flex flex-row justify-between items-center w-controls-sm h-controls-sm md:w-controls-lg md:h-controls-lg md:flex-col">
 			<div className="w-[calc(var(--controls-sm-height)*0.18)] h-full grid grid-cols-1 grid-rows-5 gap-[calc(var(--controls-sm-height)*0.02)] md:grid-cols-5 md:grid-rows-1 md:w-11/12 md:h-auto md:flex-row md:gap-[calc(var(--controls-lg-width)*0.02)] md:mr-auto">
-				<SmallControl>
+				<SmallControl label="Settings">
 					<svg viewBox="0 0 24 24">
 						<path
 							fill="currentColor"
@@ -29,6 +29,7 @@ function Controls(props: ControlsProps) {
 					</svg>
 				</SmallControl>
 				<SmallControl
+					label="Toggle Fullscreen"
 					onClick={() => {
 						screenfull.toggle().then(() => {
 							let goFull = document.querySelector("#go-full") as SVGElement;
@@ -57,7 +58,7 @@ function Controls(props: ControlsProps) {
 						></path>
 					</svg>
 				</SmallControl>
-				<SmallControl>
+				<SmallControl label="Toggle Rules">
 					<svg viewBox="0 0 24 24" className="w-full h-full">
 						<path fill="none" d="M0 0h24v24H0V0z"></path>
 						<path
@@ -66,7 +67,7 @@ function Controls(props: ControlsProps) {
 						></path>
 					</svg>
 				</SmallControl>
-				<SmallControl>
+				<SmallControl label="Info">
 					<svg viewBox="0 0 24 24">
 						<path fill="none" d="M0 0h24v24H0V0z"></path>
 						<path
@@ -75,7 +76,7 @@ function Controls(props: ControlsProps) {
 						></path>
 					</svg>
 				</SmallControl>
-				<SmallControl>
+				<SmallControl label="Restart">
 					<svg viewBox="0 0 24 24">
 						<mask id="cutout">
 							<rect width="100%" height="100%" fill="#fff"></rect>
@@ -106,6 +107,7 @@ function Controls(props: ControlsProps) {
 								<NumControl
 									key={i}
 									isDelete={true}
+									tool={props.tool}
 									onClick={() => props.enterNumber(10)}
 								></NumControl>
 							);
@@ -114,6 +116,7 @@ function Controls(props: ControlsProps) {
 								<NumControl
 									key={i}
 									num={0}
+									tool={props.tool}
 									onClick={() => props.enterNumber(0)}
 								></NumControl>
 							);
@@ -122,6 +125,7 @@ function Controls(props: ControlsProps) {
 							<NumControl
 								key={i}
 								num={i + 1}
+								tool={props.tool}
 								onClick={() => props.enterNumber(i + 1)}
 							></NumControl>
 						);
@@ -129,6 +133,7 @@ function Controls(props: ControlsProps) {
 				</div>
 				<div className="w-[calc(var(--controls-sm-height)*0.225)] h-full grid grid-cols-1 grid-rows-4 gap-[calc(var(--controls-sm-height)*0.02)] md:w-[calc(var(--controls-lg-width)*0.225)] md:gap-[calc(var(--controls-lg-width)*0.025)]">
 					<ToolControl
+						label="Number"
 						isActive={props.tool === "num"}
 						onClick={() => props.changeTool("num")}
 					>
@@ -141,6 +146,7 @@ function Controls(props: ControlsProps) {
 						</svg>
 					</ToolControl>
 					<ToolControl
+						label="Corner"
 						isActive={props.tool === "corner"}
 						onClick={() => props.changeTool("corner")}
 					>
@@ -161,6 +167,7 @@ function Controls(props: ControlsProps) {
 						</svg>
 					</ToolControl>
 					<ToolControl
+						label="Center"
 						isActive={props.tool === "center"}
 						onClick={() => props.changeTool("center")}
 					>
@@ -177,6 +184,7 @@ function Controls(props: ControlsProps) {
 						</svg>
 					</ToolControl>
 					<ToolControl
+						label="Color"
 						isActive={props.tool === "color"}
 						onClick={() => props.changeTool("color")}
 					>
@@ -207,7 +215,7 @@ function Controls(props: ControlsProps) {
 				</div>
 			</div>
 			<div className="order-2 md:order-3 w-[calc(var(--controls-sm-height)*0.235)] h-full grid grid-cols-1 grid-rows-4 gap-[calc(var(--controls-sm-height)*0.02)] md:w-full md:h-[calc(var(--controls-lg-width)*0.235)] md:grid-cols-4 md:grid-rows-1 md:gap-[calc(var(--controls-lg-width)*0.025)]">
-				<AuxControl onClick={props.undo}>
+				<AuxControl label="Undo" onClick={props.undo}>
 					<svg viewBox="0 0 24 24">
 						<path fill="none" d="M0 0h24v24H0V0z"></path>
 						<path
@@ -216,7 +224,7 @@ function Controls(props: ControlsProps) {
 						></path>
 					</svg>
 				</AuxControl>
-				<AuxControl onClick={props.redo}>
+				<AuxControl label="Redo" onClick={props.redo}>
 					<svg viewBox="0 0 24 24">
 						<path fill="none" d="M0 0h24v24H0V0z"></path>
 						<path
@@ -225,7 +233,7 @@ function Controls(props: ControlsProps) {
 						></path>
 					</svg>
 				</AuxControl>
-				<AuxControl onClick={() => {}}>
+				<AuxControl label="Confirm" onClick={() => {}}>
 					<svg viewBox="0 0 24 24">
 						<path fill="none" d="M0 0h24v24H0V0z"></path>
 						<path
@@ -236,6 +244,7 @@ function Controls(props: ControlsProps) {
 				</AuxControl>
 				<ToolControl
 					isActive={props.shiftLock}
+					label="Select"
 					noDisable={true}
 					onClick={props.toggleShiftLock}
 				>
@@ -255,19 +264,6 @@ function Controls(props: ControlsProps) {
 			</div>
 		</div>
 	);
-	// return (
-	// 	<div className="flex flex-row w-[min(50vh,85vw)] md:w-[min(25%,60vh)] md:flex-col">
-	// 		<div className="flex order-3 h-full aspect-square ml-[min(2vw,1.5vh)] md:order-2 md:w-[min(100%,60vh)] md:ml-0 md:mt-[min(1.5vw,3vh)]">
-	//
-	// 		</div>
-	// 		<div className="w-fit h-full flex-shrink-0 order-2 grid grid-cols-1 grid-rows-4 gap-[0.5vh] ml-[min(2vw,1.5vh)] md:order-3 md:w-[min(100%,60vh)] md:gap-[min(0.5vw,1vh)] md:grid-cols-4 md:grid-rows-1 md:ml-0 md:mt-[min(1.5vw,3vh)]">
-	// 			<AuxControl></AuxControl>
-	// 			<AuxControl></AuxControl>
-	// 			<AuxControl></AuxControl>
-	// 			<AuxControl></AuxControl>
-	// 		</div>
-	// 	</div>
-	// );
 }
 
 export default Controls;
