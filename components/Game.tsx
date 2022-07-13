@@ -31,8 +31,6 @@ interface GameProps {
 function Game(props: GameProps) {
 	const _cells: CellObject[][] = [];
 
-	console.log("RENDER");
-
 	const { cols, rows, board, colBlock, rowBlock } = props;
 
 	for (let y = 0; y < rows; y++) {
@@ -154,7 +152,6 @@ function Game(props: GameProps) {
 		(num: number) => {
 			if ((num <= cols && num <= rows) || num === 10) {
 				let newCells: CellObject[][] = JSON.parse(JSON.stringify(cells));
-				console.log(getTool());
 
 				for (let ypos = 0; ypos < rows; ypos++) {
 					for (let xpos = 0; xpos < cols; xpos++) {

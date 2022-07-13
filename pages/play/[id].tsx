@@ -66,15 +66,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 function Play(props: Puzzle) {
 	const [isPaused, setIsPaused] = useState(false);
+	let title = `WebSudoku | Play ${props.name} by ${props.author}`;
 
 	if (!props.board) return null;
 
 	return (
 		<>
 			<Head>
-				<title>
-					WebSudoku | Play {props.name} by {props.author}
-				</title>
+				<title>{title}</title>
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<meta
 					name="description"
