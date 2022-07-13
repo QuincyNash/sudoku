@@ -74,6 +74,16 @@ function Cell(props: CellProps) {
 
 	const corners = props.corners.sort((a, b) => a - b);
 	const gridOrder = [1, 3, 7, 9, 2, 8, 4, 6, 5];
+	const textSizing = [
+		...Array.from({ length: 5 }).map(() => {
+			return "text-[max(calc(var(--grid-sm-width)*0.035),0px)] md:text-[max(calc(var(--grid-lg-width)*0.035),0px)]";
+		}),
+		"text-[max(calc(var(--grid-sm-width)*0.03),0px)] md:text-[max(calc(var(--grid-lg-width)*0.03),0px)]",
+		"text-[max(calc(var(--grid-sm-width)*0.025),0px)] md:text-[max(calc(var(--grid-lg-width)*0.025),0px)]",
+		"text-[max(calc(var(--grid-sm-width)*0.022),0px)] md:text-[max(calc(var(--grid-lg-width)*0.022),0px)]",
+		"text-[max(calc(var(--grid-sm-width)*0.02),0px)] md:text-[max(calc(var(--grid-lg-width)*0.02),0px)]",
+		"text-[max(calc(var(--grid-sm-width)*0.018),0px)] md:text-[max(calc(var(--grid-lg-width)*0.018),0px)]",
+	];
 
 	return (
 		<button
@@ -87,20 +97,46 @@ function Cell(props: CellProps) {
 			<div
 				className="absolute w-4/5 h-4/5 z-50"
 				onMouseEnter={() => {
-					if (props.dragging && props.shifted) {
+					if (props.dragging) {
 						props.onDrag();
-						console.log("DRAG");
-					}
-				}}
-				onMouseMove={() => {
-					if (props.dragging && !props.shifted) {
-						props.onDrag();
-						console.log("DRAG");
 					}
 				}}
 			></div>
+			<div className="absolute w-full h-full grid grid-cols-3 grid-rows-3 z-40">
+				{Array.from({ length: 9 }).map((_e, i) => {
+					return (
+						<span
+							key={i}
+							className={`flex-center text-primary-400 text-[max(calc(var(--grid-sm-width)*0.04),0px)] md:text-[max(calc(var(--grid-lg-width)*0.035),0px)] ${
+								i === 8 ? "translate-x-[-45%] translate-y-[-40%]" : ""
+							}`}
+							style={{
+								order: gridOrder[i],
+							}}
+						>
+							{corners[i]}
+						</span>
+					);
+				})}
+				<span
+					className={`absolute flex-center w-1/3 h-1/3 top-1/2 left-1/2 translate-x-[-5%] translate-y-[-20%] text-primary-400 text-[max(calc(var(--grid-sm-width)*0.04),0px)] md:text-[max(calc(var(--grid-lg-width)*0.035),0px)] ${
+						corners.length === 10 ? "!flex" : "!hidden"
+					}`}
+				>
+					9
+				</span>
+			</div>
 			<div
-				className={`absolute w-full h-full flex flex-col ${
+				className={`absolute w-full h-full flex-center text-primary-400 ${
+					textSizing[props.center.length - 1]
+				} z-30`}
+			>
+				<div className="w-[95%]">
+					{props.center.sort((a, b) => a - b).join("")}
+				</div>
+			</div>
+			<div
+				className={`absolute w-full h-full flex flex-col z-20 ${
 					props.selected ? "block" : "hidden"
 				}`}
 			>
@@ -160,32 +196,9 @@ function Cell(props: CellProps) {
 					></div>
 				</div>
 			</div>
-			<div className="absolute w-full h-full grid grid-cols-3 grid-rows-3">
-				{Array.from({ length: 9 }).map((_e, i) => {
-					return (
-						<span
-							key={i}
-							className={`flex-center text-primary-400 text-[max(calc(var(--grid-sm-width)*0.04),0px)] md:text-[max(calc(var(--grid-lg-width)*0.035),0px)] ${
-								i === 8 ? "-translate-x-1/3 -translate-y-1/3" : ""
-							}`}
-							style={{
-								order: gridOrder[i],
-							}}
-						>
-							{corners[i]}
-						</span>
-					);
-				})}
-				<span
-					className={`absolute w-1/3 h-1/3 top-1/2 left-1/2 translate-x-[-16.666%] translate-y-[-16.666%] flex-center text-primary-400 text-[max(calc(var(--grid-sm-width)*0.04),0px)] md:text-[max(calc(var(--grid-lg-width)*0.035),0px)] ${
-						corners.length === 10 ? "!block" : "!hidden"
-					}`}
-				>
-					9
-				</span>
-			</div>
+
 			<span
-				className={`w-full h-full flex-center text-[4vh] font-sudoku select-none  md:text-[min(4vw,6vh)] ${
+				className={`w-full h-full flex-center text-[4vh] font-sudoku select-none  md:text-[min(4vw,6vh)] z-10 ${
 					props.given
 						? "text-secondary-900 dark:text-slate-400"
 						: "text-primary-500 dark:text-primary-400"

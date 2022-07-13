@@ -24,6 +24,8 @@ interface GameState {
 function Game(props: Puzzle) {
 	const _cells: CellObject[][] = [];
 
+	console.log("RENDER");
+
 	const { cols, rows, board, colBlock, rowBlock } = props;
 
 	for (let y = 0; y < rows; y++) {
@@ -46,14 +48,33 @@ function Game(props: Puzzle) {
 	const [cellStates, setCellStates] = useState([_cells]);
 	const [stateIndex, setStateIndex] = useState(0);
 
-	const [tool, setTool] = useState("color");
+	const [tool, setTool] = useState("num");
 	const [dragging, setDragging] = useState(false);
 	const [shifted, setShifted] = useState(false);
 	const [shiftLock, setShiftLock] = useState(false);
 
+	const [metaKeys, setMetaKeys] = useState({
+		alt: false,
+		ctrl: false,
+		meta: false,
+		shift: false,
+	});
+
 	const isShifted = useCallback(() => {
 		return shifted || shiftLock;
 	}, [shiftLock, shifted]);
+
+	const getTool = useCallback(() => {
+		if ((metaKeys.ctrl || metaKeys.meta) && (metaKeys.alt || metaKeys.shift)) {
+			return "color";
+		} else if (metaKeys.ctrl || metaKeys.meta) {
+			return "center";
+		} else if (metaKeys.alt || metaKeys.shift) {
+			return "corner";
+		} else {
+			return tool;
+		}
+	}, [metaKeys.alt, metaKeys.ctrl, metaKeys.meta, metaKeys.shift, tool]);
 
 	const saveCells = useCallback(
 		(newCells: CellObject[][]) => {
@@ -124,17 +145,45 @@ function Game(props: Puzzle) {
 		(num: number) => {
 			if ((num <= cols && num <= rows) || num === 10) {
 				let newCells: CellObject[][] = JSON.parse(JSON.stringify(cells));
+				console.log(getTool());
+
 				for (let ypos = 0; ypos < rows; ypos++) {
 					for (let xpos = 0; xpos < cols; xpos++) {
-						if (newCells[ypos][xpos].selected && !newCells[ypos][xpos].given) {
-							newCells[ypos][xpos].value = num;
+						if (!newCells[ypos][xpos].given && newCells[ypos][xpos].selected) {
+							if (getTool() === "num") {
+								newCells[ypos][xpos].value = num;
+							} else if (getTool() === "corner") {
+								let index = newCells[ypos][xpos].corners.indexOf(num);
+
+								if (index === -1) {
+									newCells[ypos][xpos].corners.push(num);
+								} else {
+									newCells[ypos][xpos].corners.splice(index, 1);
+								}
+
+								if (num === 10) {
+									newCells[ypos][xpos].corners = [];
+								}
+							} else if (getTool() === "center") {
+								let index = newCells[ypos][xpos].center.indexOf(num);
+
+								if (index === -1) {
+									newCells[ypos][xpos].center.push(num);
+								} else {
+									newCells[ypos][xpos].center.splice(index, 1);
+								}
+
+								if (num === 10) {
+									newCells[ypos][xpos].center = [];
+								}
+							}
 						}
 					}
 				}
 				saveCells(newCells);
 			}
 		},
-		[cells, cols, rows, saveCells]
+		[cells, cols, getTool, rows, saveCells]
 	);
 
 	useEffect(() => {
@@ -166,6 +215,20 @@ function Game(props: Puzzle) {
 			if (e.key == "Shift" && !e.repeat && !dragging) {
 				setShifted(false);
 			}
+
+			if (
+				e.key === "Shift" ||
+				e.key === "Alt" ||
+				e.key === "Control" ||
+				e.key === "Meta"
+			) {
+				setMetaKeys({
+					alt: e.altKey,
+					ctrl: e.ctrlKey,
+					shift: e.shiftKey,
+					meta: e.metaKey,
+				});
+			}
 		};
 
 		const keyDown = (e: React.KeyboardEvent) => {
@@ -187,6 +250,20 @@ function Game(props: Puzzle) {
 			if (e.repeat) return;
 			if (e.key === "Shift" && !dragging) {
 				setShifted(true);
+			}
+
+			if (
+				e.key === "Shift" ||
+				e.key === "Alt" ||
+				e.key === "Control" ||
+				e.key === "Meta"
+			) {
+				setMetaKeys({
+					alt: e.altKey,
+					ctrl: e.ctrlKey,
+					shift: e.shiftKey,
+					meta: e.metaKey,
+				});
 			}
 
 			if (e.key === "z" && (e.ctrlKey || e.metaKey)) {
@@ -211,7 +288,7 @@ function Game(props: Puzzle) {
 
 			if (e.key === " ") {
 				let tools = ["num", "corner", "center", "color"];
-				let toolIndex = tools.indexOf(tool);
+				let toolIndex = tools.indexOf(getTool());
 				let newIndex = (toolIndex + 1) % tools.length;
 				setTool(tools[newIndex]);
 			}
@@ -230,11 +307,13 @@ function Game(props: Puzzle) {
 				onCellClick(activeX, newY, true);
 			}
 
+			e.preventDefault();
+
 			let key: number;
 			if (e.key === "Backspace") {
 				key = 10;
-			} else if (!isNaN(parseInt(e.key))) {
-				key = parseInt(e.key);
+			} else if (!isNaN(parseInt(e.code.slice(-1)))) {
+				key = parseInt(e.code.slice(-1));
 			} else {
 				return;
 			}
@@ -258,6 +337,7 @@ function Game(props: Puzzle) {
 	}, [
 		cells,
 		cols,
+		getTool,
 		dragging,
 		enterNumber,
 		onCellClick,
@@ -375,7 +455,7 @@ function Game(props: Puzzle) {
 				toggleShiftLock={() => setShiftLock(!shiftLock)}
 				undo={undo}
 				redo={redo}
-				tool={tool}
+				tool={getTool()}
 			></Controls>
 		</main>
 	);
