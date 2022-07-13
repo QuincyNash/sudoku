@@ -15,6 +15,11 @@ module.exports = {
 				destination: "/api/random",
 				permanent: true,
 			},
+			{
+				source: "/",
+				destination: "/play/1",
+				permanent: false,
+			},
 		];
 	},
 };
