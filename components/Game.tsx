@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Puzzle } from "../pages/play/[id]";
 import Cell from "./Cell";
 import Controls from "./Controls";
 
@@ -21,7 +20,15 @@ interface GameState {
 	activeY: number;
 }
 
-function Game(props: Puzzle) {
+interface GameProps {
+	rows: number;
+	cols: number;
+	rowBlock: number;
+	colBlock: number;
+	board: number[];
+}
+
+function Game(props: GameProps) {
 	const _cells: CellObject[][] = [];
 
 	console.log("RENDER");

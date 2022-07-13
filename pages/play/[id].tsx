@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import Head from "next/head";
+import { useState } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import admin from "firebase-admin";
 import Header from "../../components/Header";
 import Game from "../../components/Game";
 import initApp from "../../lib/firebase";
-import { useRouter } from "next/router";
 
 export interface Puzzle {
 	rows: number;
@@ -12,6 +12,8 @@ export interface Puzzle {
 	rowBlock: number;
 	colBlock: number;
 	board: number[];
+	name: string;
+	author: string;
 }
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
@@ -39,6 +41,8 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 			colBlock: data.colBlock,
 			rowBlock: data.rowBlock,
 			board: data.board,
+			name: data.name,
+			author: data.author,
 		} as Puzzle,
 	};
 };
@@ -66,21 +70,33 @@ function Play(props: Puzzle) {
 	if (!props.board) return null;
 
 	return (
-		<div className="w-screen h-screen flex flex-col transition-colors dark:bg-slate-900">
-			<Header
-				onPauseToggle={() => {
-					setIsPaused(!isPaused);
-				}}
-				paused={isPaused}
-			></Header>
-			<Game
-				rows={props.rows}
-				cols={props.cols}
-				rowBlock={props.rowBlock}
-				colBlock={props.colBlock}
-				board={props.board}
-			></Game>
-		</div>
+		<>
+			<Head>
+				<title>
+					WebSudoku | Play {props.name} by {props.author}
+				</title>
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<meta
+					name="description"
+					content={`Can you solve this Sudoku puzzle (${props.name}) by ${props.author}?`}
+				></meta>
+			</Head>
+			<div className="w-screen h-screen flex flex-col transition-colors dark:bg-slate-900">
+				<Header
+					onPauseToggle={() => {
+						setIsPaused(!isPaused);
+					}}
+					paused={isPaused}
+				></Header>
+				<Game
+					rows={props.rows}
+					cols={props.cols}
+					rowBlock={props.rowBlock}
+					colBlock={props.colBlock}
+					board={props.board}
+				></Game>
+			</div>
+		</>
 	);
 }
 
