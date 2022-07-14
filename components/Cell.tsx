@@ -103,100 +103,108 @@ function Cell(props: CellProps) {
 					}
 				}}
 			></div>
-			<div className="absolute w-full h-full grid grid-cols-3 grid-rows-3 z-40">
-				{Array.from({ length: 9 }).map((_e, i) => {
-					return (
-						<span
-							key={i}
-							className={`flex-center text-primary-400 text-[max(calc(var(--grid-sm-width)*0.04),0px)] md:text-[max(calc(var(--grid-lg-width)*0.035),0px)] ${
-								i === 8 ? "translate-x-[-45%] translate-y-[-40%]" : ""
-							}`}
-							style={{
-								order: gridOrder[i],
-							}}
-						>
-							{corners[i]}
-						</span>
-					);
-				})}
-				<span
-					className={`absolute flex-center w-1/3 h-1/3 top-1/2 left-1/2 translate-x-[-5%] translate-y-[-20%] text-primary-400 text-[max(calc(var(--grid-sm-width)*0.04),0px)] md:text-[max(calc(var(--grid-lg-width)*0.035),0px)] ${
-						corners.length === 10 ? "!flex" : "!hidden"
-					}`}
+			{props.corners.length > 0 ? (
+				<div className="absolute w-full h-full grid grid-cols-3 grid-rows-3 z-40">
+					{Array.from({ length: 9 }).map((_e, i) => {
+						return (
+							<span
+								key={i}
+								className={`flex-center text-primary-400 text-[max(calc(var(--grid-sm-width)*0.04),0px)] md:text-[max(calc(var(--grid-lg-width)*0.035),0px)] ${
+									i === 8 ? "translate-x-[-45%] translate-y-[-40%]" : ""
+								}`}
+								style={{
+									order: gridOrder[i],
+								}}
+							>
+								{corners[i]}
+							</span>
+						);
+					})}
+					<span
+						className={`absolute flex-center w-1/3 h-1/3 top-1/2 left-1/2 translate-x-[-5%] translate-y-[-20%] text-primary-400 text-[max(calc(var(--grid-sm-width)*0.04),0px)] md:text-[max(calc(var(--grid-lg-width)*0.035),0px)] ${
+							corners.length === 10 ? "!flex" : "!hidden"
+						}`}
+					>
+						9
+					</span>
+				</div>
+			) : (
+				""
+			)}
+			{props.center.length > 0 ? (
+				<div
+					className={`absolute w-full h-full flex-center text-primary-400 ${
+						textSizing[props.center.length - 1]
+					} z-30`}
 				>
-					9
-				</span>
-			</div>
-			<div
-				className={`absolute w-full h-full flex-center text-primary-400 ${
-					textSizing[props.center.length - 1]
-				} z-30`}
-			>
-				<div className="w-[95%]">
-					{props.center.sort((a, b) => a - b).join("")}
+					<div className="w-[95%]">
+						{props.center.sort((a, b) => a - b).join("")}
+					</div>
 				</div>
-			</div>
-			<div
-				className={`absolute w-full h-full flex flex-col z-20 ${
-					props.selected ? "block" : "hidden"
-				}`}
-			>
-				<div className="w-full h-[calc(var(--grid-sm-width)*0.015)] flex md:h-[calc(var(--grid-lg-width)*0.015)]">
-					<div
-						className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
-							highlights.top || highlights.left || highlights.topLeft
-								? "bg-opacity-100"
-								: "bg-opacity-0"
-						}`}
-					></div>
-					<div
-						className={`flex-grow h-full bg-secondary-200 ${
-							highlights.top ? "bg-opacity-100" : "bg-opacity-0"
-						}`}
-					></div>
-					<div
-						className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
-							highlights.top || highlights.right || highlights.topRight
-								? "bg-opacity-100"
-								: "bg-opacity-0"
-						}`}
-					></div>
+			) : (
+				""
+			)}
+			{props.selected && Object.values(highlights).some((v) => v === true) ? (
+				<div className={`absolute w-full h-full flex flex-col z-20`}>
+					<div className="w-full h-[calc(var(--grid-sm-width)*0.015)] flex md:h-[calc(var(--grid-lg-width)*0.015)]">
+						<div
+							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
+								highlights.top || highlights.left || highlights.topLeft
+									? "bg-opacity-100"
+									: "bg-opacity-0"
+							}`}
+						></div>
+						<div
+							className={`flex-grow h-full bg-secondary-200 ${
+								highlights.top ? "bg-opacity-100" : "bg-opacity-0"
+							}`}
+						></div>
+						<div
+							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
+								highlights.top || highlights.right || highlights.topRight
+									? "bg-opacity-100"
+									: "bg-opacity-0"
+							}`}
+						></div>
+					</div>
+					<div className="w-full flex-grow flex">
+						<div
+							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
+								highlights.left ? "bg-opacity-100" : "bg-opacity-0"
+							}`}
+						></div>
+						<div className="flex-grow h-full"></div>
+						<div
+							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
+								highlights.right ? "bg-opacity-100" : "bg-opacity-0"
+							}`}
+						></div>
+					</div>
+					<div className="w-full h-[calc(var(--grid-sm-width)*0.015)] flex md:h-[calc(var(--grid-lg-width)*0.015)]">
+						<div
+							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
+								highlights.bottom || highlights.left || highlights.bottomLeft
+									? "bg-opacity-100"
+									: "bg-opacity-0"
+							}`}
+						></div>
+						<div
+							className={`flex-grow h-full bg-secondary-200 ${
+								highlights.bottom ? "bg-opacity-100" : "bg-opacity-0"
+							}`}
+						></div>
+						<div
+							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
+								highlights.bottom || highlights.right || highlights.bottomRight
+									? "bg-opacity-100"
+									: "bg-opacity-0"
+							}`}
+						></div>
+					</div>
 				</div>
-				<div className="w-full flex-grow flex">
-					<div
-						className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
-							highlights.left ? "bg-opacity-100" : "bg-opacity-0"
-						}`}
-					></div>
-					<div className="flex-grow h-full"></div>
-					<div
-						className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
-							highlights.right ? "bg-opacity-100" : "bg-opacity-0"
-						}`}
-					></div>
-				</div>
-				<div className="w-full h-[calc(var(--grid-sm-width)*0.015)] flex md:h-[calc(var(--grid-lg-width)*0.015)]">
-					<div
-						className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
-							highlights.bottom || highlights.left || highlights.bottomLeft
-								? "bg-opacity-100"
-								: "bg-opacity-0"
-						}`}
-					></div>
-					<div
-						className={`flex-grow h-full bg-secondary-200 ${
-							highlights.bottom ? "bg-opacity-100" : "bg-opacity-0"
-						}`}
-					></div>
-					<div
-						className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
-							highlights.bottom || highlights.right || highlights.bottomRight
-								? "bg-opacity-100"
-								: "bg-opacity-0"
-						}`}
-					></div>
-				</div>
-			</div>
+			) : (
+				""
+			)}
 
 			<span
 				className={`w-full h-full flex-center text-[4vh] font-sudoku select-none  md:text-[min(4vw,6vh)] z-10 ${
