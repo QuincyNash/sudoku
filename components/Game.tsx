@@ -314,6 +314,7 @@ function Game(props: GameProps) {
 			}
 
 			if (e.key === "r" && (e.metaKey || e.ctrlKey)) return;
+			if (e.key === "q" && (e.metaKey || e.ctrlKey)) return;
 
 			e.preventDefault();
 
