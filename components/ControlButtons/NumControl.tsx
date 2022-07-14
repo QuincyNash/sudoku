@@ -58,6 +58,22 @@ function IconOrText(props: NumControlProps) {
 				{props.num}
 			</span>
 		);
+	} else if (props.tool === "color") {
+		let backgrounds = [
+			"bg-[#7851a9]",
+			"bg-[#cfcfcf]",
+			"bg-[#5f5f5f]",
+			"bg-[#000000]",
+			"bg-[#a3e048]",
+			"bg-[#d23be7]",
+			"bg-[#eb7532]",
+			"bg-[#e6261f]",
+			"bg-[#f7d038]",
+			"bg-[#7eb7f8]",
+		];
+		return (
+			<div className={`w-3/5 h-3/5 ${backgrounds[props.num as number]}`}></div>
+		);
 	} else {
 		return (
 			<span className="font-medium text-[max(calc(var(--controls-sm-width)*0.08),0px)] md:text-[max(calc(var(--controls-lg-height)*0.08),0px)]">
