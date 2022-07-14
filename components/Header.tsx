@@ -23,7 +23,7 @@ function Header(props: HeaderProps) {
 			<div className="flex items-center m-auto mr-4">
 				<label
 					htmlFor="toggle"
-					className="pr-2 text-lg opacity-70 text-primary-900 cursor-pointer select-none transition-colors dark:text-slate-200 dark:opacity-100"
+					className="pr-2 text-lg text-primary-900 cursor-pointer select-none transition-colors dark:text-slate-200"
 				>
 					00:15
 				</label>
