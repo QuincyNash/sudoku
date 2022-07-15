@@ -5,7 +5,6 @@ specifiers:
   '@types/react': 18.0.14
   '@types/react-dom': 18.0.5
   autoprefixer: ^10.4.7
-  conic-gradient: ^1.0.0
   eslint: 8.18.0
   eslint-config-next: 12.2.0
   firebase: ^9.8.4
@@ -20,7 +19,6 @@ specifiers:
   typescript: 4.7.4
 
 dependencies:
-  conic-gradient: 1.0.0
   firebase: 9.8.4
   firebase-admin: 11.0.0
   next: 12.2.0_biqbaboplfbrettd7655fr4n2y
@@ -2754,12 +2752,6 @@ packages:
   /concat-map/0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
-  /conic-gradient/1.0.0:
-    resolution: {integrity: sha512-TEmM3Ondx8nid2AN0Rsw6eQG7PgTUkL6gs90UqX1cNqO/bpt/H/Rw6DwbzoylQ9SSxqLG1SsteAr9/yBsAzdtw==}
-    dependencies:
-      prefixfree: 1.0.0
-    dev: false
-
   /convert-source-map/1.8.0:
     resolution: {integrity: sha512-+OQdjP49zViI/6i7nIJpA8rAl4sV/JdPfU9nZs3VqOwGIgizICvuN2ru6fMd+4llL0tar18UYJXfZ/TWtmhUjA==}
     dependencies:
@@ -4797,10 +4789,6 @@ packages:
       nanoid: 3.3.4
       picocolors: 1.0.0
       source-map-js: 1.0.2
-    dev: false
-
-  /prefixfree/1.0.0:
-    resolution: {integrity: sha512-TKFEyl/lFSDLF4dHLjwUqtsJLi9Qo4uM9aaPGW4n2J+m0W88PqHHvlkLpLm1Smam8p+ohu1OjbLqSWEMYpfiZg==}
     dev: false
 
   /prelude-ls/1.2.1:
