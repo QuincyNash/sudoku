@@ -11,6 +11,7 @@ interface ControlsProps {
 	changeTool: (tool: string) => void;
 	toggleShiftLock: () => void;
 	shiftLock: boolean;
+	allColors: string[];
 	undo: () => void;
 	redo: () => void;
 	tool: string;
@@ -36,9 +37,16 @@ function Controls(props: ControlsProps) {
 							let leaveFull = document.querySelector(
 								"#leave-full"
 							) as SVGElement;
-							for (let button of [goFull, leaveFull]) {
-								button.classList.toggle("visible");
-								button.classList.toggle("hidden");
+							if (screenfull.isFullscreen) {
+								goFull.classList.remove("visible");
+								goFull.classList.add("hidden");
+								leaveFull.classList.add("visible");
+								leaveFull.classList.remove("hidden");
+							} else {
+								goFull.classList.add("visible");
+								goFull.classList.remove("hidden");
+								leaveFull.classList.remove("visible");
+								leaveFull.classList.add("hidden");
 							}
 						});
 					}}
@@ -107,6 +115,7 @@ function Controls(props: ControlsProps) {
 								<NumControl
 									key={i}
 									isDelete={true}
+									allColors={props.allColors}
 									tool={props.tool}
 									onClick={() => props.enterNumber(10)}
 								></NumControl>
@@ -117,6 +126,7 @@ function Controls(props: ControlsProps) {
 									key={i}
 									num={0}
 									tool={props.tool}
+									allColors={props.allColors}
 									onClick={() => props.enterNumber(0)}
 								></NumControl>
 							);
@@ -126,6 +136,7 @@ function Controls(props: ControlsProps) {
 								key={i}
 								num={i + 1}
 								tool={props.tool}
+								allColors={props.allColors}
 								onClick={() => props.enterNumber(i + 1)}
 							></NumControl>
 						);

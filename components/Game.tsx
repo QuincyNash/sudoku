@@ -11,7 +11,7 @@ interface CellObject {
 	value: number;
 	corners: number[];
 	center: number[];
-	color: number;
+	colors: number[];
 }
 
 interface GameState {
@@ -29,6 +29,19 @@ interface GameProps {
 }
 
 function Game(props: GameProps) {
+	const cellColors = [
+		"#7851a9",
+		"#cfcfcf",
+		"#5f5f5f",
+		"#000000",
+		"#a3e048",
+		"#d23be7",
+		"#eb7532",
+		"#e6261f",
+		"#f7d038",
+		"#7eb7f8",
+	];
+
 	const _cells: CellObject[][] = [];
 
 	const { cols, rows, board, colBlock, rowBlock } = props;
@@ -43,7 +56,7 @@ function Game(props: GameProps) {
 				value: cell === 0 ? 10 : cell,
 				corners: [],
 				center: [],
-				color: NaN,
+				colors: [],
 			});
 		}
 		_cells.push(row);
@@ -153,34 +166,72 @@ function Game(props: GameProps) {
 			if ((num <= cols && num <= rows) || num === 10) {
 				let newCells: CellObject[][] = JSON.parse(JSON.stringify(cells));
 
+				let t = getTool();
+				let rankedTools = [t].concat(
+					["num", "center", "corner", "color"].filter((v) => v !== t)
+				);
+				let deleting = "num";
+
+				if (num === 10) {
+					for (let testTool of rankedTools) {
+						let valid = false;
+						for (let ypos = 0; ypos < rows; ypos++) {
+							for (let xpos = 0; xpos < cols; xpos++) {
+								if (
+									newCells[ypos][xpos].selected &&
+									!newCells[ypos][xpos].given &&
+									((testTool === "num" && newCells[ypos][xpos].value !== 10) ||
+										(testTool === "corner" &&
+											newCells[ypos][xpos].corners.length > 0 &&
+											newCells[ypos][xpos].value === 10) ||
+										(testTool === "center" &&
+											newCells[ypos][xpos].center.length > 0 &&
+											newCells[ypos][xpos].value === 10) ||
+										(testTool === "color" &&
+											newCells[ypos][xpos].colors.length > 0))
+								) {
+									valid = true;
+									deleting = testTool;
+								}
+							}
+						}
+						if (valid) break;
+					}
+				}
+
 				for (let ypos = 0; ypos < rows; ypos++) {
 					for (let xpos = 0; xpos < cols; xpos++) {
 						if (!newCells[ypos][xpos].given && newCells[ypos][xpos].selected) {
-							if (getTool() === "num") {
+							if (t === "num" && num !== 10) {
 								newCells[ypos][xpos].value = num;
-							} else if (getTool() === "corner") {
-								let index = newCells[ypos][xpos].corners.indexOf(num);
+							} else if (num !== 10) {
+								let arr: any[];
+								if (t === "corner" && newCells[ypos][xpos].value === 10) {
+									arr = newCells[ypos][xpos].corners;
+								} else if (
+									t === "center" &&
+									newCells[ypos][xpos].value === 10
+								) {
+									arr = newCells[ypos][xpos].center;
+								} else if (t === "color") {
+									arr = newCells[ypos][xpos].colors;
+								} else arr = [];
 
+								let index = arr.indexOf(num);
 								if (index === -1) {
-									newCells[ypos][xpos].corners.push(num);
+									arr.push(num);
 								} else {
-									newCells[ypos][xpos].corners.splice(index, 1);
+									arr.splice(index, 1);
 								}
-
-								if (num === 10) {
+							} else {
+								if (deleting === "num") {
+									newCells[ypos][xpos].value = 10;
+								} else if (deleting === "corner") {
 									newCells[ypos][xpos].corners = [];
-								}
-							} else if (getTool() === "center") {
-								let index = newCells[ypos][xpos].center.indexOf(num);
-
-								if (index === -1) {
-									newCells[ypos][xpos].center.push(num);
-								} else {
-									newCells[ypos][xpos].center.splice(index, 1);
-								}
-
-								if (num === 10) {
+								} else if (deleting === "center") {
 									newCells[ypos][xpos].center = [];
+								} else {
+									newCells[ypos][xpos].colors = [];
 								}
 							}
 						}
@@ -399,7 +450,8 @@ function Game(props: GameProps) {
 								value={cells[y][x].value}
 								corners={cells[y][x].corners}
 								center={cells[y][x].center}
-								color={cells[y][x].color}
+								allColors={cellColors}
+								colors={cells[y][x].colors}
 								dragging={dragging}
 								shifted={isShifted()}
 								onClick={() => onCellClick(x, y)}
@@ -460,6 +512,7 @@ function Game(props: GameProps) {
 			<Controls
 				shiftLock={shiftLock}
 				enterNumber={enterNumber}
+				allColors={cellColors}
 				changeTool={setTool}
 				toggleShiftLock={() => setShiftLock(!shiftLock)}
 				undo={undo}

@@ -2,6 +2,7 @@ interface NumControlProps {
 	num?: number;
 	isDelete?: boolean;
 	tool: string;
+	allColors: string[];
 	onClick: () => void;
 }
 
@@ -59,20 +60,11 @@ function IconOrText(props: NumControlProps) {
 			</span>
 		);
 	} else if (props.tool === "color") {
-		let backgrounds = [
-			"bg-[#7851a9]",
-			"bg-[#cfcfcf]",
-			"bg-[#5f5f5f]",
-			"bg-[#000000]",
-			"bg-[#a3e048]",
-			"bg-[#d23be7]",
-			"bg-[#eb7532]",
-			"bg-[#e6261f]",
-			"bg-[#f7d038]",
-			"bg-[#7eb7f8]",
-		];
 		return (
-			<div className={`w-3/5 h-3/5 ${backgrounds[props.num as number]}`}></div>
+			<div
+				className={`w-3/5 h-3/5 rounded-sm border border-primary-700`}
+				style={{ backgroundColor: props.allColors[props.num as number] }}
+			></div>
 		);
 	} else {
 		return (

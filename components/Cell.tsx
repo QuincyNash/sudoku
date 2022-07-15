@@ -43,7 +43,8 @@ interface CellProps {
 	value: number;
 	corners: number[];
 	center: number[];
-	color: number;
+	allColors: string[];
+	colors: number[];
 	onClick: (_x?: number, _y?: number, arrow?: boolean) => void;
 	onDoubleClick: () => void;
 	onDrag: () => void;
@@ -85,6 +86,8 @@ function Cell(props: CellProps) {
 		"text-[max(calc(var(--grid-sm-width)*0.018),0px)] md:text-[max(calc(var(--grid-lg-width)*0.018),0px)]",
 	];
 
+	const cellColors = props.colors.map((colorNum) => props.allColors[colorNum]);
+
 	return (
 		<button
 			aria-label={`Cell #${props.index + 1}`}
@@ -103,8 +106,21 @@ function Cell(props: CellProps) {
 					}
 				}}
 			></div>
-			{props.corners.length > 0 ? (
-				<div className="absolute w-full h-full grid grid-cols-3 grid-rows-3 z-40">
+			{props.value !== 10 ? (
+				<span
+					className={`w-full h-full flex-center text-[4vh] font-sudoku select-none z-40 md:text-[min(4vw,6vh)] ${
+						props.given
+							? "text-secondary-900 dark:text-slate-400"
+							: "text-primary-500 dark:text-primary-400"
+					}`}
+				>
+					{props.value === 10 ? "" : props.value}
+				</span>
+			) : (
+				""
+			)}
+			{props.corners.length > 0 && props.value === 10 ? (
+				<div className="absolute w-full h-full grid grid-cols-3 grid-rows-3 z-30">
 					{Array.from({ length: 9 }).map((_e, i) => {
 						return (
 							<span
@@ -131,11 +147,11 @@ function Cell(props: CellProps) {
 			) : (
 				""
 			)}
-			{props.center.length > 0 ? (
+			{props.center.length > 0 && props.value === 10 ? (
 				<div
 					className={`absolute w-full h-full flex-center text-primary-400 ${
 						textSizing[props.center.length - 1]
-					} z-30`}
+					} z-20`}
 				>
 					<div className="w-[95%]">
 						{props.center.sort((a, b) => a - b).join("")}
@@ -145,7 +161,7 @@ function Cell(props: CellProps) {
 				""
 			)}
 			{props.selected && Object.values(highlights).some((v) => v === true) ? (
-				<div className={`absolute w-full h-full flex flex-col z-20`}>
+				<div className="absolute w-full h-full flex flex-col z-10">
 					<div className="w-full h-[calc(var(--grid-sm-width)*0.015)] flex md:h-[calc(var(--grid-lg-width)*0.015)]">
 						<div
 							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
@@ -205,16 +221,23 @@ function Cell(props: CellProps) {
 			) : (
 				""
 			)}
-
-			<span
-				className={`w-full h-full flex-center text-[4vh] font-sudoku select-none  md:text-[min(4vw,6vh)] z-10 ${
-					props.given
-						? "text-secondary-900 dark:text-slate-400"
-						: "text-primary-500 dark:text-primary-400"
-				}`}
-			>
-				{props.value === 10 ? "" : props.value}
-			</span>
+			{props.colors.length > 0 ? (
+				<div
+					className="absolute w-full h-full"
+					style={{
+						background: `repeating-conic-gradient(${[
+							`${cellColors[cellColors.length - 1]} 0% 7%`,
+							...cellColors.map((color, i) => {
+								return `${color} ${(i * 100) / cellColors.length + 7.3}% ${
+									((i + 1) * 100) / cellColors.length + 7
+								}%`;
+							}),
+						].join()})`,
+					}}
+				></div>
+			) : (
+				""
+			)}
 		</button>
 	);
 }
