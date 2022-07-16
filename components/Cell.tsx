@@ -41,10 +41,10 @@ interface CellProps {
 	dragging: boolean;
 	shifted: boolean;
 	value: number;
-	corners: number[];
-	center: number[];
+	corners: Set<number>;
+	center: Set<number>;
 	allColors: string[];
-	colors: number[];
+	colors: Set<number>;
 	onClick: (_x?: number, _y?: number, arrow?: boolean) => void;
 	onDoubleClick: () => void;
 	onDrag: () => void;
@@ -73,7 +73,10 @@ function Cell(props: CellProps) {
 			props.sides.bottom && props.sides.right && !props.sides.bottomRight,
 	};
 
-	const corners = props.corners.sort((a, b) => a - b);
+	const corners = Array.from(props.corners).sort((a, b) => a - b);
+	const center = Array.from(props.center);
+	const colors = Array.from(props.colors);
+
 	const gridOrder = [1, 3, 7, 9, 2, 8, 4, 6, 5];
 	const textSizing = [
 		...Array.from({ length: 5 }).map(() => {
@@ -86,7 +89,7 @@ function Cell(props: CellProps) {
 		"text-[max(calc(var(--grid-sm-width)*0.018),0px)] md:text-[max(calc(var(--grid-lg-width)*0.018),0px)]",
 	];
 
-	const cellColors = props.colors.map((colorNum) => props.allColors[colorNum]);
+	const cellColors = colors.map((colorNum) => props.allColors[colorNum]);
 
 	return (
 		<button
@@ -119,7 +122,7 @@ function Cell(props: CellProps) {
 			) : (
 				""
 			)}
-			{props.corners.length > 0 && props.value === 10 ? (
+			{corners.length > 0 && props.value === 10 ? (
 				<div className="absolute w-full h-full grid grid-cols-3 grid-rows-3 z-30">
 					{Array.from({ length: 9 }).map((_e, i) => {
 						return (
@@ -147,15 +150,13 @@ function Cell(props: CellProps) {
 			) : (
 				""
 			)}
-			{props.center.length > 0 && props.value === 10 ? (
+			{center.length > 0 && props.value === 10 ? (
 				<div
 					className={`absolute w-full h-full flex-center text-primary-400 ${
-						textSizing[props.center.length - 1]
+						textSizing[center.length - 1]
 					} z-20`}
 				>
-					<div className="w-[95%]">
-						{props.center.sort((a, b) => a - b).join("")}
-					</div>
+					<div className="w-[95%]">{center.sort((a, b) => a - b).join("")}</div>
 				</div>
 			) : (
 				""
@@ -221,11 +222,11 @@ function Cell(props: CellProps) {
 			) : (
 				""
 			)}
-			{props.colors.length > 0 ? (
+			{colors.length > 0 ? (
 				<div
 					className="absolute w-full h-full"
 					style={{
-						background: `repeating-conic-gradient(${[
+						backgroundImage: `conic-gradient(${[
 							`${cellColors[cellColors.length - 1]} 0% 7%`,
 							...cellColors.map((color, i) => {
 								return `${color} ${(i * 100) / cellColors.length + 7.3}% ${

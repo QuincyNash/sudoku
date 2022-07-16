@@ -1,17 +1,20 @@
 import React, { useCallback, useEffect, useState } from "react";
+import cloneOptions from "rfdc";
+import { deepEqual } from "fast-equals";
 import Cell from "./Cell";
 import Controls from "./Controls";
 
 let activeX = NaN;
 let activeY = NaN;
+const clone = cloneOptions();
 
 interface CellObject {
 	selected: boolean;
 	given: boolean;
 	value: number;
-	corners: number[];
-	center: number[];
-	colors: number[];
+	corners: Set<number>;
+	center: Set<number>;
+	colors: Set<number>;
 }
 
 interface GameState {
@@ -54,9 +57,9 @@ function Game(props: GameProps) {
 				selected: false,
 				given: cell !== 0,
 				value: cell === 0 ? 10 : cell,
-				corners: [],
-				center: [],
-				colors: [],
+				corners: new Set(),
+				center: new Set(),
+				colors: new Set(),
 			});
 		}
 		_cells.push(row);
@@ -96,10 +99,8 @@ function Game(props: GameProps) {
 
 	const saveCells = useCallback(
 		(newCells: CellObject[][]) => {
-			if (JSON.stringify(newCells) !== JSON.stringify(cells)) {
-				let newCellStates: CellObject[][][] = JSON.parse(
-					JSON.stringify(cellStates)
-				);
+			if (!deepEqual(newCells, cells)) {
+				let newCellStates: CellObject[][][] = clone(cellStates);
 
 				newCellStates[stateIndex + 1] = newCells;
 				newCellStates = newCellStates.slice(0, stateIndex + 2);
@@ -130,7 +131,7 @@ function Game(props: GameProps) {
 		(_x: number, _y: number, arrow = false) => {
 			if (dragging) return;
 
-			let newCells: CellObject[][] = JSON.parse(JSON.stringify(cells));
+			let newCells: CellObject[][] = clone(cells);
 
 			let selectedCount = 0;
 			for (let ypos = 0; ypos < rows; ypos++) {
@@ -164,7 +165,7 @@ function Game(props: GameProps) {
 	const enterNumber = useCallback(
 		(num: number) => {
 			if ((num <= cols && num <= rows) || num === 10) {
-				let newCells: CellObject[][] = JSON.parse(JSON.stringify(cells));
+				let newCells: CellObject[][] = clone(cells);
 
 				let t = getTool();
 				let rankedTools = [t].concat(
@@ -182,13 +183,13 @@ function Game(props: GameProps) {
 									!newCells[ypos][xpos].given &&
 									((testTool === "num" && newCells[ypos][xpos].value !== 10) ||
 										(testTool === "corner" &&
-											newCells[ypos][xpos].corners.length > 0 &&
+											newCells[ypos][xpos].corners.size > 0 &&
 											newCells[ypos][xpos].value === 10) ||
 										(testTool === "center" &&
-											newCells[ypos][xpos].center.length > 0 &&
+											newCells[ypos][xpos].center.size > 0 &&
 											newCells[ypos][xpos].value === 10) ||
 										(testTool === "color" &&
-											newCells[ypos][xpos].colors.length > 0))
+											newCells[ypos][xpos].colors.size > 0))
 								) {
 									valid = true;
 									deleting = testTool;
@@ -199,39 +200,55 @@ function Game(props: GameProps) {
 					}
 				}
 
+				let isRemoving = true;
 				for (let ypos = 0; ypos < rows; ypos++) {
 					for (let xpos = 0; xpos < cols; xpos++) {
-						if (!newCells[ypos][xpos].given && newCells[ypos][xpos].selected) {
+						if (
+							newCells[ypos][xpos].selected &&
+							((t === "corner" && !newCells[ypos][xpos].corners.has(num)) ||
+								(t === "center" && !newCells[ypos][xpos].center.has(num)) ||
+								(t === "color" && !newCells[ypos][xpos].colors.has(num)))
+						) {
+							isRemoving = false;
+						}
+					}
+				}
+
+				for (let ypos = 0; ypos < rows; ypos++) {
+					for (let xpos = 0; xpos < cols; xpos++) {
+						if (
+							(!newCells[ypos][xpos].given || t === "color") &&
+							newCells[ypos][xpos].selected
+						) {
 							if (t === "num" && num !== 10) {
 								newCells[ypos][xpos].value = num;
 							} else if (num !== 10) {
-								let arr: any[];
+								let set: Set<number>;
 								if (t === "corner" && newCells[ypos][xpos].value === 10) {
-									arr = newCells[ypos][xpos].corners;
+									set = newCells[ypos][xpos].corners;
 								} else if (
 									t === "center" &&
 									newCells[ypos][xpos].value === 10
 								) {
-									arr = newCells[ypos][xpos].center;
+									set = newCells[ypos][xpos].center;
 								} else if (t === "color") {
-									arr = newCells[ypos][xpos].colors;
-								} else arr = [];
+									set = newCells[ypos][xpos].colors;
+								} else set = new Set();
 
-								let index = arr.indexOf(num);
-								if (index === -1) {
-									arr.push(num);
+								if (set.has(num) && isRemoving) {
+									set.delete(num);
 								} else {
-									arr.splice(index, 1);
+									set.add(num);
 								}
 							} else {
 								if (deleting === "num") {
 									newCells[ypos][xpos].value = 10;
 								} else if (deleting === "corner") {
-									newCells[ypos][xpos].corners = [];
+									newCells[ypos][xpos].corners = new Set();
 								} else if (deleting === "center") {
-									newCells[ypos][xpos].center = [];
+									newCells[ypos][xpos].center = new Set();
 								} else {
-									newCells[ypos][xpos].colors = [];
+									newCells[ypos][xpos].colors = new Set();
 								}
 							}
 						}
@@ -253,7 +270,7 @@ function Game(props: GameProps) {
 		const mouseDown = (e: React.MouseEvent) => {
 			const target = e.target as HTMLElement;
 			if (target.tagName === "MAIN" || target.classList.contains("header")) {
-				let newCells: CellObject[][] = JSON.parse(JSON.stringify(cells));
+				let newCells: CellObject[][] = clone(cells);
 
 				for (let y = 0; y < rows; y++) {
 					for (let x = 0; x < cols; x++) {
@@ -295,12 +312,6 @@ function Game(props: GameProps) {
 				let newX = newIndex % cols;
 				let newY = Math.floor(newIndex / cols);
 
-				(
-					document.querySelectorAll(".cell")[
-						newY * cols + newX
-					] as HTMLButtonElement
-				).focus();
-
 				onCellClick(newX, newY, true);
 			}
 
@@ -334,7 +345,7 @@ function Game(props: GameProps) {
 			if (e.key === "a" && (e.ctrlKey || e.metaKey)) {
 				e.preventDefault();
 
-				let newCells: CellObject[][] = JSON.parse(JSON.stringify(cells));
+				let newCells: CellObject[][] = clone(cells);
 				for (let y = 0; y < rows; y++) {
 					for (let x = 0; x < cols; x++) {
 						newCells[y][x].selected = true;
@@ -366,6 +377,8 @@ function Game(props: GameProps) {
 
 			if (e.key === "r" && (e.metaKey || e.ctrlKey)) return;
 			if (e.key === "q" && (e.metaKey || e.ctrlKey)) return;
+			if (e.key === "=" && (e.metaKey || e.ctrlKey)) return;
+			if (e.key === "-" && (e.metaKey || e.ctrlKey)) return;
 
 			e.preventDefault();
 
@@ -456,9 +469,7 @@ function Game(props: GameProps) {
 								shifted={isShifted()}
 								onClick={() => onCellClick(x, y)}
 								onDoubleClick={() => {
-									let newCells: CellObject[][] = JSON.parse(
-										JSON.stringify(cells)
-									);
+									let newCells: CellObject[][] = clone(cells);
 
 									const value = newCells[y][x].value;
 									if (value === 10) return;
@@ -484,14 +495,7 @@ function Game(props: GameProps) {
 									setCells(newCells);
 								}}
 								onDrag={() => {
-									let newCells: CellObject[][] = JSON.parse(
-										JSON.stringify(cells)
-									);
-									(
-										document.querySelectorAll(".cell")[
-											y * cols + x
-										] as HTMLButtonElement
-									).focus();
+									let newCells: CellObject[][] = clone(cells);
 									activeX = x;
 									activeY = y;
 
