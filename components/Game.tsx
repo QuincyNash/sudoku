@@ -451,94 +451,87 @@ function Game(props: GameProps) {
 
 	return (
 		<main className="w-full h-full flex flex-col justify-center items-center gap-[min(6vw,4vh)] md:gap-[3vw] md:flex-row">
-			<div className="relative w-grid-sm aspect-square border-[3px] border-primary-800 md:w-grid-lg transition-colors dark:border-slate-500">
-				<div
-					className="absolute inset-0 grid"
-					style={{
-						gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
-						gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
-					}}
-				>
-					{Array.from({ length: cols * rows }).map((_e, i) => {
-						const [x, y] = [i % cols, Math.floor(i / cols)];
+			<div
+				className="relative w-grid-sm aspect-square grid border-[3px] border-primary-800 md:w-grid-lg transition-colors dark:border-slate-500"
+				style={{
+					gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+					gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
+				}}
+			>
+				{Array.from({ length: cols * rows }).map((_e, i) => {
+					const [x, y] = [i % cols, Math.floor(i / cols)];
 
-						return (
-							<Cell
-								key={i}
-								index={i}
-								selected={cells[y][x].selected}
-								sides={{
-									top: y > 0 ? cells[y - 1][x].selected : false,
-									bottom: y < rows - 1 ? cells[y + 1][x].selected : false,
-									left: x > 0 ? cells[y][x - 1].selected : false,
-									right: x < cols - 1 ? cells[y][x + 1].selected : false,
-									topLeft:
-										x > 0 && y > 0 ? cells[y - 1][x - 1].selected : false,
-									topRight:
-										x < cols - 1 && y > 0
-											? cells[y - 1][x + 1].selected
-											: false,
-									bottomLeft:
-										x > 0 && y < rows - 1
-											? cells[y + 1][x - 1].selected
-											: false,
-									bottomRight:
-										x < cols - 1 && y < rows - 1
-											? cells[y + 1][x + 1].selected
-											: false,
-								}}
-								given={cells[y][x].given}
-								value={cells[y][x].value}
-								corners={cells[y][x].corners}
-								center={cells[y][x].center}
-								allColors={cellColors}
-								colors={cells[y][x].colors}
-								dragging={dragging}
-								shifted={isShifted()}
-								onClick={() => onCellClick(x, y)}
-								onDoubleClick={() => {
-									let newCells: CellObject[][] = clone(cells);
+					return (
+						<Cell
+							key={i}
+							index={i}
+							selected={cells[y][x].selected}
+							sides={{
+								top: y > 0 ? cells[y - 1][x].selected : false,
+								bottom: y < rows - 1 ? cells[y + 1][x].selected : false,
+								left: x > 0 ? cells[y][x - 1].selected : false,
+								right: x < cols - 1 ? cells[y][x + 1].selected : false,
+								topLeft: x > 0 && y > 0 ? cells[y - 1][x - 1].selected : false,
+								topRight:
+									x < cols - 1 && y > 0 ? cells[y - 1][x + 1].selected : false,
+								bottomLeft:
+									x > 0 && y < rows - 1 ? cells[y + 1][x - 1].selected : false,
+								bottomRight:
+									x < cols - 1 && y < rows - 1
+										? cells[y + 1][x + 1].selected
+										: false,
+							}}
+							given={cells[y][x].given}
+							value={cells[y][x].value}
+							corners={cells[y][x].corners}
+							center={cells[y][x].center}
+							allColors={cellColors}
+							colors={cells[y][x].colors}
+							dragging={dragging}
+							shifted={isShifted()}
+							onClick={() => onCellClick(x, y)}
+							onDoubleClick={() => {
+								let newCells: CellObject[][] = clone(cells);
 
-									const value = newCells[y][x].value;
-									if (value === 10) return;
+								const value = newCells[y][x].value;
+								if (value === 10) return;
 
-									let count = 0;
-									for (let ypos = 0; ypos < rows; ypos++) {
-										for (let xpos = 0; xpos < cols; xpos++) {
-											if (newCells[ypos][xpos].value === value) {
-												count += 1;
-											}
+								let count = 0;
+								for (let ypos = 0; ypos < rows; ypos++) {
+									for (let xpos = 0; xpos < cols; xpos++) {
+										if (newCells[ypos][xpos].value === value) {
+											count += 1;
 										}
 									}
+								}
 
-									if (count === 1) return;
+								if (count === 1) return;
 
-									for (let ypos = 0; ypos < rows; ypos++) {
-										for (let xpos = 0; xpos < cols; xpos++) {
-											if (newCells[ypos][xpos].value === value) {
-												newCells[ypos][xpos].selected = true;
-											}
+								for (let ypos = 0; ypos < rows; ypos++) {
+									for (let xpos = 0; xpos < cols; xpos++) {
+										if (newCells[ypos][xpos].value === value) {
+											newCells[ypos][xpos].selected = true;
 										}
 									}
-									setCells(newCells);
-								}}
-								onDrag={() => {
-									let newCells: CellObject[][] = clone(cells);
-									activeX = x;
-									activeY = y;
+								}
+								setCells(newCells);
+							}}
+							onDrag={() => {
+								let newCells: CellObject[][] = clone(cells);
+								activeX = x;
+								activeY = y;
 
-									newCells[y][x].selected =
-										isShifted() && dragRemove ? false : true;
-									setCells(newCells);
-								}}
-								cols={cols}
-								rows={rows}
-								colBlock={colBlock}
-								rowBlock={rowBlock}
-							></Cell>
-						);
-					})}
-				</div>
+								newCells[y][x].selected =
+									isShifted() && dragRemove ? false : true;
+								setCells(newCells);
+							}}
+							cols={cols}
+							rows={rows}
+							colBlock={colBlock}
+							rowBlock={rowBlock}
+						></Cell>
+					);
+				})}
 			</div>
 			<Controls
 				shiftLock={shiftLock}

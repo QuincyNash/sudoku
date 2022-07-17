@@ -68,7 +68,7 @@ function Play(props: Puzzle) {
 	const [isPaused, setIsPaused] = useState(false);
 	let title = `WebSudoku | Play ${props.name} by ${props.author}`;
 
-	if (!props.board) return null;
+	if (!props.board) return <p>Puzzle does not exist. Redirecting...</p>;
 
 	return (
 		<>
