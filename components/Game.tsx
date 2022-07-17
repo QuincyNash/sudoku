@@ -71,6 +71,7 @@ function Game(props: GameProps) {
 
 	const [tool, setTool] = useState("num");
 	const [dragging, setDragging] = useState(false);
+	const [dragRemove, setDragRemove] = useState(false);
 	const [shifted, setShifted] = useState(false);
 	const [shiftLock, setShiftLock] = useState(false);
 
@@ -268,7 +269,8 @@ function Game(props: GameProps) {
 		const mouseLeave = () => setDragging(false);
 
 		const mouseDown = (e: React.MouseEvent) => {
-			const target = e.target as HTMLElement;
+			let target = e.target as HTMLElement;
+
 			if (target.tagName === "MAIN" || target.classList.contains("header")) {
 				let newCells: CellObject[][] = clone(cells);
 
@@ -283,6 +285,27 @@ function Game(props: GameProps) {
 				setCells(newCells);
 			}
 			setDragging(true);
+			if (
+				!target.classList.contains("cell") &&
+				!target.parentElement?.classList.contains("cell")
+			) {
+				setDragRemove(false);
+			} else if (isShifted()) {
+				if (!target.classList.contains("cell")) {
+					target = target.parentElement as HTMLElement;
+				}
+				let [x, y] = [
+					parseInt(target.dataset.x as string),
+					parseInt(target.dataset.y as string),
+				];
+				if (!cells[y][x].selected) {
+					setDragRemove(true);
+				} else {
+					setDragRemove(false);
+				}
+			} else {
+				setDragRemove(false);
+			}
 		};
 
 		const keyUp = (e: React.KeyboardEvent) => {
@@ -363,23 +386,27 @@ function Game(props: GameProps) {
 
 			if (e.key === "ArrowLeft") {
 				let newX = (activeX - 1 + cols) % cols;
-				onCellClick(newX, activeY, true);
+				if (!cells[activeY][newX].selected) onCellClick(newX, activeY, true);
 			} else if (e.key === "ArrowRight") {
 				let newX = (activeX + 1) % cols;
-				onCellClick(newX, activeY, true);
+				if (!cells[activeY][newX].selected) onCellClick(newX, activeY, true);
 			} else if (e.key === "ArrowUp") {
 				let newY = (activeY - 1 + cols) % cols;
-				onCellClick(activeX, newY, true);
+				if (!cells[newY][activeX].selected) onCellClick(activeX, newY, true);
 			} else if (e.key === "ArrowDown") {
 				let newY = (activeY + 1) % cols;
-				onCellClick(activeX, newY, true);
+				if (!cells[newY][activeX].selected) onCellClick(activeX, newY, true);
 			}
 
-			if (e.key === "r" && (e.metaKey || e.ctrlKey)) return;
-			if (e.key === "q" && (e.metaKey || e.ctrlKey)) return;
-			if (e.key === "=" && (e.metaKey || e.ctrlKey)) return;
-			if (e.key === "-" && (e.metaKey || e.ctrlKey)) return;
+			console.log(e.key, parseInt(e.code.slice(-1)));
 
+			if (
+				e.key !== "Backspace" &&
+				isNaN(parseInt(e.code.slice(-1))) &&
+				(e.metaKey || e.ctrlKey)
+			) {
+				return;
+			}
 			e.preventDefault();
 
 			let key: number;
@@ -419,6 +446,7 @@ function Game(props: GameProps) {
 		shifted,
 		tool,
 		undo,
+		isShifted,
 	]);
 
 	return (
@@ -499,9 +527,8 @@ function Game(props: GameProps) {
 									activeX = x;
 									activeY = y;
 
-									newCells[y][x].selected = isShifted()
-										? !newCells[y][x].selected
-										: true;
+									newCells[y][x].selected =
+										isShifted() && dragRemove ? false : true;
 									setCells(newCells);
 								}}
 								cols={cols}
