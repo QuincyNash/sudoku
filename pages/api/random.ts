@@ -1,4 +1,3 @@
-import admin from "firebase-admin";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
