@@ -10,11 +10,6 @@ export default function Document() {
 				<meta name="theme-color" content="#19B344" />
 				<link rel="preconnect" href="https://fonts.googleapis.com"></link>
 				<link
-					rel="preconnect"
-					href="https://fonts.gstatic.com"
-					crossOrigin="anonymous"
-				></link>
-				<link
 					href="https://fonts.googleapis.com/css2?family=Lobster&display=swap"
 					rel="stylesheet"
 				></link>
