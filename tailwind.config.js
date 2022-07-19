@@ -12,11 +12,13 @@ module.exports = {
 					raw: "(min-width: 725px), (orientation: landscape)",
 				},
 			},
+			spacing: {
+				"grid-sm": "var(--grid-sm-width)",
+				"grid-lg": "var(--grid-lg-width)",
+			},
 			width: {
 				"controls-sm": "var(--controls-sm-width)",
 				"controls-lg": "var(--controls-lg-width)",
-				"grid-sm": "var(--grid-sm-width)",
-				"grid-lg": "var(--grid-lg-width)",
 			},
 			height: {
 				"controls-sm": "var(--controls-sm-height)",
@@ -58,6 +60,7 @@ module.exports = {
 					"sans-serif",
 				],
 				sudoku: ["Tahoma", "Verdana", "sans-serif"],
+				cursive: ["Lobster", "cursive"],
 			},
 		},
 	},

@@ -29,6 +29,8 @@ interface GameProps {
 	rowBlock: number;
 	colBlock: number;
 	board: number[];
+	name: string;
+	author: string;
 }
 
 function Game(props: GameProps) {
@@ -64,6 +66,9 @@ function Game(props: GameProps) {
 		}
 		_cells.push(row);
 	}
+
+	const [showModal, setShowModal] = useState(false);
+	const [modal, setModal] = useState("rules");
 
 	const [cells, setCells] = useState(_cells);
 	const [cellStates, setCellStates] = useState([_cells]);
@@ -329,6 +334,11 @@ function Game(props: GameProps) {
 		};
 
 		const keyDown = (e: React.KeyboardEvent) => {
+			if (e.key === "Escape" && showModal) {
+				setShowModal(false);
+			}
+			if (showModal) return;
+
 			if (e.key === "Tab") {
 				let newIndex = activeY * cols + activeX + (e.shiftKey ? -1 : 1);
 				newIndex = (newIndex + rows * cols) % (rows * cols);
@@ -447,12 +457,13 @@ function Game(props: GameProps) {
 		tool,
 		undo,
 		isShifted,
+		showModal,
 	]);
 
 	return (
 		<main className="w-full h-full flex flex-col justify-center items-center gap-[min(6vw,4vh)] md:gap-[3vw] md:flex-row">
 			<div
-				className="relative w-grid-sm aspect-square grid border-[3px] border-primary-800 md:w-grid-lg transition-colors dark:border-slate-500"
+				className="relative w-grid-sm h-grid-sm grid border-[3px] border-primary-800 md:w-grid-lg md:h-grid-lg transition-colors dark:border-slate-500"
 				style={{
 					gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
 					gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
@@ -533,7 +544,14 @@ function Game(props: GameProps) {
 					);
 				})}
 			</div>
+
 			<Controls
+				showModal={showModal}
+				setShowModal={setShowModal}
+				setModal={setModal}
+				modal={modal}
+				name={props.name}
+				author={props.author}
 				shiftLock={shiftLock}
 				enterNumber={enterNumber}
 				allColors={cellColors}

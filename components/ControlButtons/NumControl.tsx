@@ -9,15 +9,14 @@ interface NumControlProps {
 function NumControl(props: NumControlProps) {
 	return (
 		<button
-			aria-label={
-				typeof props.num === "number" ? props.num.toString() : "Delete"
-			}
+			aria-label={props.isDelete ? "Delete" : props.num?.toString()}
+			title={props.isDelete ? "Delete" : props.num?.toString()}
 			className={`h-full aspect-square ${
 				props.isDelete ? "col-span-2 w-full" : "col-span-1"
 			} flex-center rounded-md bg-primary-500 dark:bg-primary-700 bg-opacity-100 border border-primary-400 dark:border-primary-600 outline-none transition-colors hover:bg-opacity-90 dark:hover:bg-opacity-80`}
 			onClick={props.onClick}
 		>
-			<span className="w-full h-full flex-center text-white  font-primary select-none transition-colors  dark:text-slate-300">
+			<span className="w-full h-full flex-center text-white font-primary select-none transition-colors  dark:text-slate-300">
 				<IconOrText {...props}></IconOrText>
 			</span>
 		</button>
@@ -39,7 +38,7 @@ function IconOrText(props: NumControlProps) {
 		);
 	} else if (props.tool === "center") {
 		return (
-			<span className="text-[max(calc(var(--controls-sm-width)*0.06),0px)] md:text-[max(calc(var(--controls-lg-height)*0.06),0px)]">
+			<span className="text-[max(calc(var(--controls-sm-width)*0.07),0px)] md:text-[max(calc(var(--controls-lg-width)*0.1),0px)]">
 				{props.num}
 			</span>
 		);
@@ -49,12 +48,12 @@ function IconOrText(props: NumControlProps) {
 			spacing = "mr-auto ml-[calc(var(--controls-sm-width)*0.015)]";
 		} else if (props.num === 3 || props.num === 6 || props.num === 9) {
 			spacing =
-				"ml-auto mr-[calc(var(--controls-sm-width)*0.015)] md:mr-[calc(var(--controls-lg-height)*0.015)]";
+				"ml-auto mr-[calc(var(--controls-sm-width)*0.015)] md:mr-[calc(var(--controls-lg-width)*0.03)]";
 		}
 
 		return (
 			<span
-				className={`text-[max(calc(var(--controls-sm-width)*0.06),0px)] md:text-[max(calc(var(--controls-lg-height)*0.06),0px)] ${spacing}`}
+				className={`text-[max(calc(var(--controls-sm-width)*0.07),0px)] md:text-[max(calc(var(--controls-lg-width)*0.1),0px)] ${spacing}`}
 			>
 				{props.num}
 			</span>
@@ -68,7 +67,7 @@ function IconOrText(props: NumControlProps) {
 		);
 	} else {
 		return (
-			<span className="font-medium text-[max(calc(var(--controls-sm-width)*0.08),0px)] md:text-[max(calc(var(--controls-lg-height)*0.08),0px)]">
+			<span className="font-medium text-[max(calc(var(--controls-sm-width)*0.11),0px)] md:text-[max(calc(var(--controls-lg-width)*0.15),0px)]">
 				{props.num}
 			</span>
 		);

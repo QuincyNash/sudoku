@@ -10,6 +10,7 @@ function ToolControl(props: ToolControlProps) {
 	return (
 		<button
 			aria-label={props.label}
+			title={props.isActive && !props.noDisable ? undefined : props.label}
 			className={`h-full aspect-square flex-center ml-auto ${
 				props.isActive
 					? "text-white border-opacity-100 dark:bg-primary-700 dark:text-slate-200 dark:border-primary-400"

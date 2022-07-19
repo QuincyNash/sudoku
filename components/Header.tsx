@@ -7,9 +7,10 @@ interface HeaderProps {
 
 function Header(props: HeaderProps) {
 	return (
-		<div className="header sticky top-0 flex items-center w-full h-10 flex-shrink-0 bg-primary-400 transition-colors dark:bg-primary-600">
+		<header className="header sticky top-0 flex items-center w-full h-10 flex-shrink-0 bg-primary-400 transition-colors dark:bg-primary-600">
 			<button
 				aria-label="Menu"
+				title="Menu"
 				className="w-6 h-6 ml-4 text-primary-800 outline-none transition-colors dark:text-slate-200"
 			>
 				<svg width="24" height="24">
@@ -23,6 +24,7 @@ function Header(props: HeaderProps) {
 			<div className="flex items-center h-full ml-auto mr-4">
 				<label
 					htmlFor="toggle"
+					title={props.paused ? "Unpause" : "Pause"}
 					className="pr-2 text-lg text-primary-900 cursor-pointer select-none transition-colors dark:text-slate-200"
 				>
 					00:15
@@ -30,6 +32,7 @@ function Header(props: HeaderProps) {
 				<button
 					onClick={props.onPauseToggle}
 					aria-label={props.paused ? "Unpause" : "Pause"}
+					title={props.paused ? "Unpause" : "Pause"}
 					id="toggle"
 					className="w-6 h-6 text-primary-900 outline-none transition-colors dark:text-slate-100"
 				>
@@ -45,7 +48,7 @@ function Header(props: HeaderProps) {
 					</svg>
 				</button>
 			</div>
-		</div>
+		</header>
 	);
 }
 

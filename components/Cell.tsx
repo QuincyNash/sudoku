@@ -113,13 +113,13 @@ function Cell(props: CellProps) {
 			></div>
 			{props.value !== 10 ? (
 				<span
-					className={`w-full h-full flex-center text-[4vh] font-sudoku select-none z-40 md:text-[min(4vw,6vh)] ${
+					className={`w-full h-full flex-center text-[max(calc(var(--grid-sm-width)*0.08),0px)] font-sudoku select-none z-40 md:text-[max(calc(var(--grid-lg-width)*0.08),0px)] ${
 						props.given
 							? "text-secondary-900 dark:text-slate-400"
 							: "text-primary-500 dark:text-primary-400"
 					}`}
 				>
-					{props.value === 10 ? "" : props.value}
+					{props.value}
 				</span>
 			) : (
 				""

@@ -14,10 +14,10 @@ svg {
 }
 
 :root {
-	--controls-sm-width: min(54.5vh, 70vw);
-	--controls-sm-height: min(35vh, 45vw);
-	--controls-lg-width: min(50vh, 30vw);
-	--controls-lg-height: min(75vh, 45vw);
+	--controls-sm-width: min(47vh, 70.5vw);
+	--controls-sm-height: min(30vh, 45vw);
+	--controls-lg-width: min(46vh, 30vw);
+	--controls-lg-height: min(80vh, 52vw);
 	--grid-sm-width: min(52vh, 85vw);
 	--grid-lg-width: min(60vw, 82vh);
 }

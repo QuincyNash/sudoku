@@ -93,6 +93,8 @@ function Play(props: Puzzle) {
 					rowBlock={props.rowBlock}
 					colBlock={props.colBlock}
 					board={props.board}
+					name={props.name}
+					author={props.author}
 				></Game>
 			</div>
 		</>
