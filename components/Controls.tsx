@@ -31,6 +31,11 @@ function Controls(props: ControlsProps) {
 			{props.showModal ? (
 				<div
 					className={`fixed top-0 left-0 w-full h-full flex-center z-[999999] bg-[rgba(60,60,60,0.7)]`}
+					onClick={(e) => {
+						if ((e.target as HTMLElement).classList.contains("fixed")) {
+							props.setShowModal(false);
+						}
+					}}
 				>
 					<div className="w-2/3 max-w-[500px] p-2.5 flex flex-col items-center border-[10px] border-gray-300 bg-white rounded-lg">
 						{props.modal === "rules" ? (
