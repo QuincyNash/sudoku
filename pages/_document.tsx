@@ -8,7 +8,6 @@ export default function Document() {
 				<link rel="apple-touch-icon" href="/logo-512x512.png"></link>
 				<link rel="shortcut icon" type="image/png" href="/favicon.png" />
 				<meta name="theme-color" content="#19B344" />
-				<link rel="preconnect" href="https://fonts.googleapis.com"></link>
 				<link
 					href="https://fonts.googleapis.com/css2?family=Lobster&display=swap"
 					rel="stylesheet"
