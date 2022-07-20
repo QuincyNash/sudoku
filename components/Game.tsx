@@ -3,6 +3,7 @@ import cloneOptions from "rfdc";
 import { deepEqual } from "fast-equals";
 import Cell from "./Cell";
 import Controls from "./Controls";
+import { useDarkMode } from "../pages/play/[id]";
 
 let activeX = NaN;
 let activeY = NaN;
@@ -79,6 +80,8 @@ function Game(props: GameProps) {
 	const [dragRemove, setDragRemove] = useState(false);
 	const [shifted, setShifted] = useState(false);
 	const [shiftLock, setShiftLock] = useState(false);
+
+	const darkMode = useDarkMode();
 
 	const [metaKeys, setMetaKeys] = useState({
 		alt: false,
@@ -408,8 +411,6 @@ function Game(props: GameProps) {
 				if (!cells[newY][activeX].selected) onCellClick(activeX, newY, true);
 			}
 
-			console.log(e.key, parseInt(e.code.slice(-1)));
-
 			if (
 				e.key !== "Backspace" &&
 				isNaN(parseInt(e.code.slice(-1))) &&
@@ -461,7 +462,10 @@ function Game(props: GameProps) {
 	]);
 
 	return (
-		<main className="w-full h-full flex flex-col justify-center items-center gap-[min(6vw,4vh)] md:gap-[3vw] md:flex-row">
+		<main
+			className="w-full h-full flex flex-col justify-center items-center gap-[min(6vw,4vh)] md:gap-[3vw] md:flex-row"
+			style={{ display: darkMode ? "none" : "flex" }}
+		>
 			<div
 				className="relative w-grid-sm h-grid-sm grid border-[3px] border-primary-800 md:w-grid-lg md:h-grid-lg transition-colors dark:border-slate-500"
 				style={{

@@ -11,6 +11,8 @@ module.exports = {
 				md: {
 					raw: "(min-width: 725px), (orientation: landscape)",
 				},
+				"login-wrap": "531px",
+				"signup-wrap": "513px",
 			},
 			spacing: {
 				"grid-sm": "var(--grid-sm-width)",
@@ -61,6 +63,7 @@ module.exports = {
 				],
 				sudoku: ["Tahoma", "Verdana", "sans-serif"],
 				cursive: ["Lobster", "cursive"],
+				courgette: ["Courgette", "cursive"],
 			},
 		},
 	},

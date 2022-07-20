@@ -1,7 +1,18 @@
+import { initializeApp } from "firebase/app";
 import admin from "firebase-admin";
 
-export default function initApp() {
-	if (admin.apps.length === 0) {
+export default function initApp(isClient = false) {
+	if (isClient) {
+		initializeApp({
+			apiKey: "AIzaSyAPkqcRj4Ca1iG-KGQSoB8J4BMZKHo9kyo",
+			authDomain: "sudoku-dec29.firebaseapp.com",
+			projectId: "sudoku-dec29",
+			storageBucket: "sudoku-dec29.appspot.com",
+			messagingSenderId: "477015124553",
+			appId: "1:477015124553:web:d16f7035dab85876046d98",
+			measurementId: "G-PKL9MWTESV",
+		});
+	} else if (admin.apps.length === 0) {
 		admin.initializeApp({
 			credential: admin.credential.cert({
 				type: "service_account",

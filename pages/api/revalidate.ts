@@ -9,12 +9,12 @@ export default async function handler(
 
 		if (id) {
 			if (req.query.token !== process.env.TOKEN) {
-				return res.status(401).json({ message: "Invalid Token" });
+				return res.status(400).json({ message: "Bad Request" });
 			}
 
 			await res.revalidate(`/play/${id}`);
 		} else {
-			return res.json({ message: "Invalid Id" });
+			return res.status(400).json({ message: "Bad Request" });
 		}
 
 		return res.json({ message: "Success" });
