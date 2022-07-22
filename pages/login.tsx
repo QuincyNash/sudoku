@@ -24,8 +24,12 @@ export default function SignUp() {
 	return (
 		<>
 			<Head>
-				<meta></meta>
 				<title>WebSudoku | Login</title>
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<meta
+					name="description"
+					content="Login to your account with WebSudoku"
+				></meta>
 			</Head>
 			<div className="w-screen h-screen overflow-auto flex justify-center bg-[#f8f9fd]">
 				<div className="w-[calc(100%-2rem)] max-w-[600px] h-fit p-[clamp(24px,25vw-135px,48px)] my-auto pt-12 bg-white rounded-lg shadow-md">

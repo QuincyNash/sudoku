@@ -46,8 +46,12 @@ export default function SignUp() {
 	return (
 		<>
 			<Head>
-				<meta></meta>
 				<title>WebSudoku | Sign Up</title>
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<meta
+					name="description"
+					content="Create an account with WebSudoku"
+				></meta>
 			</Head>
 
 			<Loader visible={loading}></Loader>
