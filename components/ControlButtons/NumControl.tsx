@@ -16,7 +16,7 @@ function NumControl(props: NumControlProps) {
 			} flex-center rounded-md bg-primary-500 dark:bg-primary-700 bg-opacity-100 border border-primary-400 dark:border-primary-600 outline-none transition-colors hover:bg-opacity-90 dark:hover:bg-opacity-80`}
 			onClick={props.onClick}
 		>
-			<span className="w-full h-full flex-center text-white font-primary select-none transition-colors  dark:text-slate-300">
+			<span className="w-full h-full text-white select-none transition-colors flex-center font-primary dark:text-slate-300">
 				<IconOrText {...props}></IconOrText>
 			</span>
 		</button>

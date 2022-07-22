@@ -19,7 +19,7 @@ function ToolControl(props: ToolControlProps) {
 			disabled={!props.noDisable && props.isActive}
 			onClick={props.onClick}
 		>
-			<div className="w-3/4 aspect-square flex justify-center justify-items-center">
+			<div className="flex justify-center w-3/4 aspect-square justify-items-center">
 				{props.children}
 			</div>
 		</button>

@@ -5,17 +5,21 @@ import {
 	signInWithEmailAndPassword,
 	GithubAuthProvider,
 	getRedirectResult,
+	FacebookAuthProvider,
 } from "firebase/auth";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Form from "../components/Form";
+import LoginButtons from "../components/LoginButtons";
 
 export default function SignUp() {
 	const router = useRouter();
 
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
 	return (
 		<>
@@ -23,71 +27,65 @@ export default function SignUp() {
 				<meta></meta>
 				<title>WebSudoku | Login</title>
 			</Head>
-			<div className="w-screen h-screen flex-center bg-[#f8f9fd]">
-				<div className="w-[calc(100%-2rem)] max-w-[600px] h-fit p-[clamp(24px,25vw-135px,48px)] pt-12 bg-white rounded-lg shadow-md">
-					<h3 className="text-4xl text-center mb-4 font-courgette">Login</h3>
-					<form
-						method="post"
-						className="w-full h-full flex flex-col gap-4"
+			<div className="w-screen h-screen overflow-auto flex justify-center bg-[#f8f9fd]">
+				<div className="w-[calc(100%-2rem)] max-w-[600px] h-fit p-[clamp(24px,25vw-135px,48px)] my-auto pt-12 bg-white rounded-lg shadow-md">
+					<h3 className="mb-4 text-4xl text-center font-courgette">Login</h3>
+					<Form
+						error={error}
+						disabled={loading}
+						submitText="Login"
+						footerText="Don't have an account?"
+						footerLink="/signup"
+						footerLinkText="Sign Up"
+						fields={[
+							{
+								id: "email",
+								type: "email",
+								autoComplete: "email",
+								placeholder: "Email",
+								minLength: 1,
+								rules: [],
+							},
+							{
+								id: "password",
+								type: "password",
+								autoComplete: "new-password",
+								placeholder: "Password",
+								minLength: 8,
+								maxLength: 48,
+								rules: [
+									{
+										required: "letter",
+										count: 1,
+									},
+									{
+										required: "number",
+										count: 1,
+									},
+									{
+										required: "special",
+										count: 1,
+									},
+								],
+							},
+						]}
 						onSubmit={(e) => {
 							e.preventDefault();
 						}}
 					>
-						<input
-							name="email"
-							className="form-element"
-							type="email"
-							autoComplete="email"
-							placeholder="Email"
-							required
-						/>
-						<input
-							name="password"
-							className="form-element"
-							type="password"
-							autoComplete="current-password"
-							placeholder="Password"
-							required
-						/>
-						<button type="submit" className="form-submit">
-							Login
-						</button>
-						<div className="flex w-full">
-							<button type="button" className="google-signin" formNoValidate>
-								<Image
-									alt=""
-									width="20px"
-									height="20px"
-									src="/google.svg"
-								></Image>
-								<span className="hidden login-wrap:block">
-									Login with Google
-								</span>
-								<span className="block login-wrap:hidden">Google</span>
-							</button>
-							<button type="button" className="facebook-signin" formNoValidate>
-								<Image
-									alt=""
-									width="20px"
-									height="20px"
-									src="/facebook.svg"
-								></Image>
-								<span className="hidden login-wrap:block">
-									Login with Facebook
-								</span>
-								<span className="block login-wrap:hidden">Facebook</span>
-							</button>
-						</div>
-					</form>
-					<p className="text-center mt-4">
-						Don&apos;t have an account?{" "}
-						<Link
-							href="/signup"
-							className="underline text-blue-600 hover:text-purple-700 focus:text-purple-700"
-						>
-							Sign Up
-						</Link>
-					</p>
+						<LoginButtons
+							loading={loading}
+							isLogin={true}
+							onGoogleClick={() => {
+								localStorage.setItem("WebSudoku_FIREBASE_REDIRECTING", "true");
+								signInWithRedirect(getAuth(), new GoogleAuthProvider());
+							}}
+							onFacebookClick={() => {
+								localStorage.setItem("WebSudoku_FIREBASE_REDIRECTING", "true");
+								signInWithRedirect(getAuth(), new FacebookAuthProvider());
+							}}
+						></LoginButtons>
+					</Form>
 				</div>
 			</div>
 		</>

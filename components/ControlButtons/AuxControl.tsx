@@ -9,7 +9,7 @@ function AuxControl(props: AuxControlProps) {
 		<button
 			aria-label={props.label}
 			title={props.label}
-			className="h-full aspect-square flex-center rounded-md border border-primary-300 border-opacity-50 outline-none bg-primary-500 bg-opacity-0 text-primary-500 transition-colors hover:bg-opacity-20"
+			className="h-full border outline-none transition-colors bg-opacity-0 border-opacity-50 rounded-md aspect-square flex-center border-primary-300 bg-primary-500 text-primary-500 hover:bg-opacity-20"
 			onClick={props.onClick}
 		>
 			<div className="w-2/3 h-2/3 flex-center">{props.children}</div>

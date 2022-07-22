@@ -30,7 +30,7 @@ function Controls(props: ControlsProps) {
 		<>
 			{props.showModal ? (
 				<div
-					className={`fixed top-0 left-0 w-full h-full flex-center z-[999999] bg-[rgba(60,60,60,0.7)]`}
+					className={`fixed top-0 left-0 w-full h-full flex-center z-[999999] bg-modal-dark`}
 					onClick={(e) => {
 						if ((e.target as HTMLElement).classList.contains("fixed")) {
 							props.setShowModal(false);
@@ -52,7 +52,7 @@ function Controls(props: ControlsProps) {
 			) : (
 				""
 			)}
-			<div className="flex flex-row justify-between items-center w-controls-sm h-controls-sm md:w-controls-lg md:h-controls-lg md:flex-col">
+			<div className="flex flex-row items-center justify-between w-controls-sm h-controls-sm md:w-controls-lg md:h-controls-lg md:flex-col">
 				<Banner
 					name={props.name}
 					author={props.author}

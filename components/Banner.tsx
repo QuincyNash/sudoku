@@ -17,7 +17,7 @@ function Banner(props: BannerProps) {
 			}}
 		>
 			<div
-				className="w-full max-h-full flex text-secondary-600"
+				className="flex w-full max-h-full text-secondary-600"
 				style={{
 					height: props.height
 						? props.height
@@ -36,9 +36,9 @@ function Banner(props: BannerProps) {
 						></path>
 					</svg>
 				</div>
-				<div className="flex-grow h-full flex-center bg-current overflow-hidden">
+				<div className="flex-grow h-full overflow-hidden bg-current flex-center">
 					<p
-						className="whitespace-nowrap overflow-hidden overflow-ellipsis text-center text-white font-cursive"
+						className="overflow-hidden text-center text-white whitespace-nowrap overflow-ellipsis font-cursive"
 						style={{
 							fontSize: props.height
 								? `calc(${props.height} * 0.3)`

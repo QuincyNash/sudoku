@@ -10,15 +10,14 @@ interface SignupForm {
 	password: string;
 }
 
-export interface User {
-	username: string;
+export interface UserInfo {
 	pro: boolean;
 	darkmode: boolean;
 }
 
 const usernameValidator = /^[a-zA-Z0-9_-]{3,20}$/;
 const passwordValidator =
-	/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,64}$/;
+	/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,48}$/;
 
 export default async function handler(
 	req: NextApiRequest,
@@ -74,10 +73,9 @@ export default async function handler(
 
 						const db = admin.firestore();
 						await db.doc(`/users/${user.uid}`).create({
-							username,
 							pro: false,
 							darkmode: true,
-						} as User);
+						} as UserInfo);
 
 						return res.status(200).json({ message: "Success" });
 					} catch (err) {

@@ -96,7 +96,7 @@ function Cell(props: CellProps) {
 			aria-label={`Cell #${props.index + 1}`}
 			data-x={x}
 			data-y={y}
-			className="cell relative flex-center border border-primary-800  outline-none dark:border-slate-500"
+			className="relative border outline-none cell flex-center border-primary-800 dark:border-slate-500"
 			style={{
 				borderWidth: getBorderWidth(props),
 			}}
@@ -104,7 +104,7 @@ function Cell(props: CellProps) {
 			onDoubleClick={props.onDoubleClick}
 		>
 			<div
-				className="absolute w-4/5 h-4/5 z-50"
+				className="absolute z-50 w-4/5 h-4/5"
 				onMouseEnter={() => {
 					if (props.dragging) {
 						props.onDrag();
@@ -125,7 +125,7 @@ function Cell(props: CellProps) {
 				""
 			)}
 			{corners.length > 0 && props.value === 10 ? (
-				<div className="absolute w-full h-full grid grid-cols-3 grid-rows-3 z-30">
+				<div className="absolute z-30 w-full h-full grid grid-cols-3 grid-rows-3">
 					{Array.from({ length: 9 }).map((_e, i) => {
 						return (
 							<span
@@ -164,7 +164,7 @@ function Cell(props: CellProps) {
 				""
 			)}
 			{props.selected && Object.values(highlights).some((v) => v === true) ? (
-				<div className="absolute w-full h-full flex flex-col z-10">
+				<div className="absolute z-10 flex flex-col w-full h-full">
 					<div className="w-full h-[calc(var(--grid-sm-width)*0.015)] flex md:h-[calc(var(--grid-lg-width)*0.015)]">
 						<div
 							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
@@ -186,7 +186,7 @@ function Cell(props: CellProps) {
 							}`}
 						></div>
 					</div>
-					<div className="w-full flex-grow flex">
+					<div className="flex flex-grow w-full">
 						<div
 							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
 								highlights.left ? "bg-opacity-100" : "bg-opacity-0"

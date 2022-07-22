@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useEffect, useState, createContext, useContext } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import admin from "firebase-admin";
-import { User } from "../api/signup";
+import { UserInfo } from "../api/signup";
 import Header from "../../components/Header";
 import Game from "../../components/Game";
 import startApp from "../../lib/client";
@@ -72,29 +72,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 	};
 };
 
-const DarkModeContext = createContext(false);
-
 function Play(props: Puzzle) {
 	const [isPaused, setIsPaused] = useState(false);
-	const [isPro, setIsPro] = useState(false);
-	const [darkMode, setDarkMode] = useState(false);
-
-	useEffect(() => {
-		startApp();
-
-		onAuthStateChanged(getAuth(), async (user) => {
-			console.log(user);
-			if (user) {
-				const ref = await getDoc(doc(getFirestore(), `/users/${user.uid}`));
-
-				const proVersion: boolean = await ref.get("pro");
-				const darkMode: boolean = await ref.get("darkmode");
-
-				setIsPro(proVersion);
-				setDarkMode(darkMode && proVersion);
-			}
-		});
-	});
 
 	let title = `WebSudoku | Play ${props.name} by ${props.author}`;
 
@@ -110,29 +89,25 @@ function Play(props: Puzzle) {
 					content={`Can you solve this Sudoku puzzle (${props.name}) by ${props.author}?`}
 				></meta>
 			</Head>
-			<DarkModeContext.Provider value={darkMode}>
-				<div className="w-screen h-screen flex flex-col transition-colors dark:bg-slate-900">
-					<Header
-						onPauseToggle={() => {
-							setIsPaused(!isPaused);
-						}}
-						paused={isPaused}
-					></Header>
-					<Game
-						rows={props.rows}
-						cols={props.cols}
-						rowBlock={props.rowBlock}
-						colBlock={props.colBlock}
-						board={props.board}
-						name={props.name}
-						author={props.author}
-					></Game>
-				</div>
-			</DarkModeContext.Provider>
+			<div className="flex flex-col w-screen h-screen transition-colors dark:bg-slate-900">
+				<Header
+					onPauseToggle={() => {
+						setIsPaused(!isPaused);
+					}}
+					paused={isPaused}
+				></Header>
+				<Game
+					rows={props.rows}
+					cols={props.cols}
+					rowBlock={props.rowBlock}
+					colBlock={props.colBlock}
+					board={props.board}
+					name={props.name}
+					author={props.author}
+				></Game>
+			</div>
 		</>
 	);
 }
-
-export const useDarkMode = () => useContext(DarkModeContext);
 
 export default Play;

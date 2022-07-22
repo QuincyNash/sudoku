@@ -7,11 +7,11 @@ interface HeaderProps {
 
 function Header(props: HeaderProps) {
 	return (
-		<header className="header sticky top-0 flex items-center w-full h-10 flex-shrink-0 bg-primary-400 transition-colors dark:bg-primary-600">
+		<header className="sticky top-0 flex items-center flex-shrink-0 w-full h-10 transition-colors header bg-primary-400 dark:bg-primary-600">
 			<button
 				aria-label="Menu"
 				title="Menu"
-				className="w-6 h-6 ml-4 text-primary-800 outline-none transition-colors dark:text-slate-200"
+				className="w-6 h-6 ml-4 outline-none transition-colors text-primary-800 dark:text-slate-200"
 			>
 				<svg width="24" height="24">
 					<path d="M0 0h24v24H0V0z" fill="none"></path>
@@ -25,7 +25,7 @@ function Header(props: HeaderProps) {
 				<label
 					htmlFor="toggle"
 					title={props.paused ? "Unpause" : "Pause"}
-					className="pr-2 text-lg text-primary-900 cursor-pointer select-none transition-colors dark:text-slate-200"
+					className="pr-2 text-lg cursor-pointer select-none transition-colors text-primary-900 dark:text-slate-200"
 				>
 					00:15
 				</label>
@@ -34,7 +34,7 @@ function Header(props: HeaderProps) {
 					aria-label={props.paused ? "Unpause" : "Pause"}
 					title={props.paused ? "Unpause" : "Pause"}
 					id="toggle"
-					className="w-6 h-6 text-primary-900 outline-none transition-colors dark:text-slate-100"
+					className="w-6 h-6 outline-none transition-colors text-primary-900 dark:text-slate-100"
 				>
 					<svg>
 						<path

@@ -1,3 +1,5 @@
+const plugin = require("tailwindcss/plugin");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	content: [
@@ -11,7 +13,7 @@ module.exports = {
 				md: {
 					raw: "(min-width: 725px), (orientation: landscape)",
 				},
-				"login-wrap": "531px",
+				"login-wrap": "483px",
 				"signup-wrap": "513px",
 			},
 			spacing: {
@@ -27,6 +29,9 @@ module.exports = {
 				"controls-lg": "var(--controls-lg-height)",
 			},
 			colors: {
+				"modal-light": "rgba(60, 60, 60, 0.3)",
+				"modal-dark": "rgba(60, 60, 60, 0.7)",
+				"form-red": "#d93025",
 				primary: {
 					100: "#24FF62",
 					200: "#20E658",
@@ -68,5 +73,9 @@ module.exports = {
 		},
 	},
 	safelist: ["order-1", "order-2"],
-	plugins: [],
+	plugins: [
+		plugin(function ({ addVariant }) {
+			addVariant("hover-focus", ["&:hover", "&:focus-visible"]);
+		}),
+	],
 };
