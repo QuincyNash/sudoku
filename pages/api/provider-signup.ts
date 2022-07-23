@@ -21,31 +21,23 @@ export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse<{ message: string }>
 ) {
-	return new Promise(async (resolve, reject) => {
-		const idToken = req.body as string;
-		const auth = admin.auth();
+	const idToken = req.body as string;
+	const auth = admin.auth();
 
-		auth
-			.verifyIdToken(idToken)
-			.then(async (user) => {
-				const db = admin.firestore();
-				const doc = db.doc(`/users/${user.uid}`);
+	try {
+		const user = await auth.verifyIdToken(idToken);
 
-				if ((await doc.get()).exists) {
-					return res.status(200).json({ message: "Success" });
-				}
+		const db = admin.firestore();
+		const doc = db.doc(`/users/${user.uid}`);
 
-				doc
-					.create(defaultUser)
-					.then(() => {
-						return res.status(200).json({ message: "Success" });
-					})
-					.catch(() => {
-						return res.status(500).json({ message: "Server Error" });
-					});
-			})
-			.catch(() => {
-				return res.status(500).json({ message: "Server Error" });
-			});
-	});
+		if ((await doc.get()).exists) {
+			return res.status(200).json({ message: "Success" });
+		}
+
+		await doc.create(defaultUser);
+
+		return res.status(200).json({ message: "Success" });
+	} catch {
+		return res.status(500).json({ message: "Server Error" });
+	}
 }
