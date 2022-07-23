@@ -32,20 +32,20 @@ export default async function handler(
 				const doc = db.doc(`/users/${user.uid}`);
 
 				if ((await doc.get()).exists) {
-					res.status(200).json({ message: "Success" });
+					return res.status(200).json({ message: "Success" });
 				}
 
 				doc
 					.create(defaultUser)
 					.then(() => {
-						res.status(200).json({ message: "Success" });
+						return res.status(200).json({ message: "Success" });
 					})
 					.catch(() => {
-						res.status(500).json({ message: "Server Error" });
+						return res.status(500).json({ message: "Server Error" });
 					});
 			})
 			.catch(() => {
-				res.status(500).json({ message: "Server Error" });
+				return res.status(500).json({ message: "Server Error" });
 			});
 	});
 }
