@@ -105,7 +105,7 @@ function getError(
 function Error(props: { error: string | null; hidden: boolean }) {
 	if (props.error !== null && !props.hidden) {
 		return (
-			<div className="box-content p-3 bg-red-200 border border-red-400 rounded-md h-fit min-h-6">
+			<div className="h-fit min-h-6 box-content p-3 bg-red-200 border border-red-400 rounded-md">
 				<span className="text-red-900">{props.error}</span>
 			</div>
 		);
@@ -117,7 +117,7 @@ function Error(props: { error: string | null; hidden: boolean }) {
 function InputError(props: { error: string }) {
 	if (props.error) {
 		return (
-			<div className="flex items-center w-full mt-1 ml-2 h-fit min-h-6 text-form-red">
+			<div className="h-fit min-h-6 text-form-red flex items-center w-full mt-1 ml-2">
 				<svg className="flex-shrink-0 w-6 h-6" viewBox="0 0 24 24">
 					<path
 						fill="currentColor"
@@ -200,7 +200,6 @@ export default function Form(props: FormProps) {
 							}
 							autoComplete={field.autoComplete}
 							placeholder={field.placeholder}
-							minLength={field.minLength}
 							maxLength={field.maxLength}
 							onInput={() => {
 								let newErrors = [...errors];
@@ -229,7 +228,7 @@ export default function Form(props: FormProps) {
 									showPasswords[i] ? "Hide Password" : "Show password"
 								}
 								title={showPasswords[i] ? "Hide Password" : "Show password"}
-								className="absolute w-8 h-8 p-1 text-gray-400 transition-colors -translate-y-1/2 rounded-full hover:text-gray-600 hover:bg-gray-200 top-8 right-3"
+								className="hover:text-gray-600 hover:bg-gray-200 top-8 right-3 absolute w-8 h-8 p-1 text-gray-400 transition-colors -translate-y-1/2 rounded-full"
 								onClick={() => {
 									let newShowPasswords = [...showPasswords];
 									newShowPasswords[i] = !newShowPasswords[i];
@@ -270,7 +269,7 @@ export default function Form(props: FormProps) {
 				<Link href={props.footerLink}>
 					<a
 						tabIndex={props.disabled ? -1 : undefined}
-						className="p-1 ml-1 text-blue-600 underline border border-transparent rounded-md outline-none focus-visible:border-blue-400 hover:text-purple-700 focus:text-purple-700"
+						className="focus-visible:border-blue-400 hover:text-purple-700 focus:text-purple-700 p-1 ml-1 text-blue-600 underline border border-transparent rounded-md outline-none"
 					>
 						{props.footerLinkText}
 					</a>

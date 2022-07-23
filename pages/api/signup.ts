@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import admin from "firebase-admin";
 import { validate } from "email-validator";
+import defaultUser from "../../lib/default-user";
 import initApp from "../../lib/firebase";
-import { fetchSignInMethodsForEmail } from "firebase/auth";
 
 interface SignupForm {
 	username: string;
@@ -72,10 +72,7 @@ export default async function handler(
 						});
 
 						const db = admin.firestore();
-						await db.doc(`/users/${user.uid}`).create({
-							pro: false,
-							darkmode: true,
-						} as UserInfo);
+						await db.doc(`/users/${user.uid}`).create(defaultUser);
 
 						return res.status(200).json({ message: "Success" });
 					} catch (err) {

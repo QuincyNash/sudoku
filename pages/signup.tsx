@@ -5,6 +5,7 @@ import {
 	GoogleAuthProvider,
 	signInWithEmailAndPassword,
 	signInWithRedirect,
+	signOut,
 } from "firebase/auth";
 import Head from "next/head";
 import Image from "next/image";
@@ -20,7 +21,6 @@ export default function SignUp() {
 	const router = useRouter();
 
 	const [loading, setLoading] = useState(false);
-	const [hideError, setHideError] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
@@ -32,13 +32,25 @@ export default function SignUp() {
 			);
 
 			startApp();
+			const auth = getAuth();
 
-			const result = await getRedirectResult(getAuth());
+			const result = await getRedirectResult(auth);
 			if (result) {
-				console.log(result?.user);
+				const res = await fetch("/api/provider-signup", {
+					method: "POST",
+					body: await result.user.getIdToken(),
+				});
+				const message = (await res.json()).message;
 
 				localStorage.removeItem("WebSudoku_FIREBASE_REDIRECTING");
-				router.push("/play/1");
+
+				if (message === "Success") {
+					router.push("/play/1");
+				} else {
+					await signOut(auth);
+					setLoading(false);
+					setError("Something went wrong. Please try again later.");
+				}
 			}
 		})();
 	});
@@ -59,7 +71,7 @@ export default function SignUp() {
 			<div className="w-screen h-screen overflow-auto flex justify-center bg-[#f8f9fd]">
 				<div className="w-[calc(100%-2rem)] max-w-[600px] h-fit p-[clamp(24px,25vw-135px,48px)] my-auto pt-12 bg-white rounded-lg shadow-md">
 					<h1
-						className="mb-4 text-4xl text-center font-courgette"
+						className="font-courgette mb-4 text-4xl text-center"
 						style={{
 							userSelect: loading ? "none" : "text",
 						}}
@@ -131,7 +143,6 @@ export default function SignUp() {
 						onSubmit={(e) => {
 							e.preventDefault();
 
-							localStorage.setItem("WebSudoku_FIREBASE_REDIRECTING", "true");
 							setLoading(true);
 
 							const form = e.target as HTMLFormElement;
@@ -168,9 +179,7 @@ export default function SignUp() {
 										router.push("/play/1");
 									});
 								} else {
-									localStorage.removeItem("WebSudoku_FIREBASE_REDIRECTING");
 									setLoading(false);
-									setHideError(false);
 
 									if (message === "Bad Request") {
 										setError("Your username, email, or password was invalid");

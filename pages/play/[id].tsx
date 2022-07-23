@@ -2,13 +2,11 @@ import Head from "next/head";
 import { useEffect, useState, createContext, useContext } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import admin from "firebase-admin";
-import { UserInfo } from "../api/signup";
 import Header from "../../components/Header";
 import Game from "../../components/Game";
 import startApp from "../../lib/client";
 import initApp from "../../lib/firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 export interface Puzzle {
 	rows: number;
@@ -79,6 +77,13 @@ function Play(props: Puzzle) {
 
 	if (!props.board) return <p>Puzzle does not exist. Redirecting...</p>;
 
+	startApp();
+
+	onAuthStateChanged(getAuth(), (user) => {
+		console.log(user);
+		signOut(getAuth());
+	});
+
 	return (
 		<>
 			<Head>
@@ -89,7 +94,7 @@ function Play(props: Puzzle) {
 					content={`Can you solve this Sudoku puzzle (${props.name}) by ${props.author}?`}
 				></meta>
 			</Head>
-			<div className="flex flex-col w-screen h-screen transition-colors dark:bg-slate-900">
+			<div className="dark:bg-slate-900 flex flex-col w-screen h-screen transition-colors">
 				<Header
 					onPauseToggle={() => {
 						setIsPaused(!isPaused);
