@@ -24,6 +24,8 @@ export default async function handler(
 	const idToken = req.body as string;
 	const auth = admin.auth();
 
+	console.log(idToken);
+
 	try {
 		const user = await auth.verifyIdToken(idToken);
 
@@ -35,9 +37,10 @@ export default async function handler(
 		}
 
 		await doc.create(defaultUser);
+		console.log(`Sign Up Provider with ID: ${user.uid}`);
 
-		return res.status(200).json({ message: "Success" });
+		res.status(200).json({ message: "Success" });
 	} catch {
-		return res.status(500).json({ message: "Server Error" });
+		res.status(500).json({ message: "Server Error" });
 	}
 }

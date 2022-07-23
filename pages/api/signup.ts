@@ -74,6 +74,8 @@ export default async function handler(
 						const db = admin.firestore();
 						await db.doc(`/users/${user.uid}`).create(defaultUser);
 
+						console.log(`Sign Up User with ID: ${user.uid}`);
+
 						return res.status(200).json({ message: "Success" });
 					} catch (err) {
 						return res.status(500).json({ message: "Server Error" });
