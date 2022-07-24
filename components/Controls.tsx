@@ -26,33 +26,33 @@ interface ControlsProps {
 }
 
 function Controls(props: ControlsProps) {
+	console.log(props.showModal);
+
 	return (
 		<>
-			{props.showModal ? (
-				<div
-					className={`fixed top-0 left-0 w-full h-full flex-center z-[999999] bg-modal-dark`}
-					onClick={(e) => {
-						if ((e.target as HTMLElement).classList.contains("fixed")) {
-							props.setShowModal(false);
-						}
-					}}
-				>
-					<div className="w-2/3 max-w-[500px] p-2.5 flex flex-col items-center border-[10px] border-gray-300 bg-white rounded-lg">
-						{props.modal === "rules" ? (
-							<RulesModal
-								name={props.name}
-								author={props.author}
-								exit={() => props.setShowModal(false)}
-							></RulesModal>
-						) : (
-							<InfoModal exit={() => props.setShowModal(false)}></InfoModal>
-						)}
-					</div>
+			<div
+				className={`fixed top-0 left-0 w-full h-full flex-center z-[999999] bg-modal-dark ${
+					props.showModal ? "opacity-100" : "pointer-events-none opacity-0"
+				} transition-opacity`}
+				onClick={(e) => {
+					if ((e.target as HTMLElement).classList.contains("fixed")) {
+						props.setShowModal(false);
+					}
+				}}
+			>
+				<div className="w-2/3 max-w-[500px] p-2.5 flex flex-col items-center border-[10px] border-gray-300 bg-white rounded-lg">
+					{props.modal === "rules" ? (
+						<RulesModal
+							name={props.name}
+							author={props.author}
+							exit={() => props.setShowModal(false)}
+						></RulesModal>
+					) : (
+						<InfoModal exit={() => props.setShowModal(false)}></InfoModal>
+					)}
 				</div>
-			) : (
-				""
-			)}
-			<div className="flex flex-row items-center justify-between w-controls-sm h-controls-sm md:w-controls-lg md:h-controls-lg md:flex-col">
+			</div>
+			<div className="w-controls-sm h-controls-sm md:w-controls-lg md:h-controls-lg md:flex-col flex flex-row items-center justify-between">
 				<Banner
 					name={props.name}
 					author={props.author}
