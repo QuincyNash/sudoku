@@ -8,6 +8,9 @@ const nextConfig = {
 	images: {
 		domains: ["www.gstatic.com"],
 	},
+	env: {
+		NEXT_PUBLIC_NAME: "WebSudoku",
+	},
 	async redirects() {
 		return [
 			{

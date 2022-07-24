@@ -16,6 +16,7 @@ import Form from "../components/Form";
 import Loader from "../components/Loader";
 import LoginButtons from "../components/LoginButtons";
 import startApp from "../lib/client";
+import { FIREBASE_REDIRECT } from "./login";
 
 export default function SignUp() {
 	const router = useRouter();
@@ -26,9 +27,7 @@ export default function SignUp() {
 	useEffect(() => {
 		(async () => {
 			setLoading(
-				localStorage.getItem("WebSudoku_FIREBASE_REDIRECTING") === "true"
-					? true
-					: false
+				localStorage.getItem(FIREBASE_REDIRECT) === "true" ? true : false
 			);
 
 			startApp();
@@ -42,7 +41,7 @@ export default function SignUp() {
 				});
 				const message = (await res.json()).message;
 
-				localStorage.removeItem("WebSudoku_FIREBASE_REDIRECTING");
+				localStorage.removeItem(FIREBASE_REDIRECT);
 
 				if (message === "Success") {
 					router.push("/play/1");
@@ -55,14 +54,16 @@ export default function SignUp() {
 		})();
 	});
 
+	const title = `${process.env.NEXT_PUBLIC_NAME} | Sign Up`;
+
 	return (
 		<>
 			<Head>
-				<title>WebSudoku | Sign Up</title>
+				<title>{title}</title>
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<meta
 					name="description"
-					content="Create an account with WebSudoku"
+					content={`Create an account with ${process.env.NEXT_PUBLIC_NAME}`}
 				></meta>
 			</Head>
 
@@ -198,11 +199,11 @@ export default function SignUp() {
 							loading={loading}
 							isLogin={false}
 							onGoogleClick={() => {
-								localStorage.setItem("WebSudoku_FIREBASE_REDIRECTING", "true");
+								localStorage.setItem(FIREBASE_REDIRECT, "true");
 								signInWithRedirect(getAuth(), new GoogleAuthProvider());
 							}}
 							onFacebookClick={() => {
-								localStorage.setItem("WebSudoku_FIREBASE_REDIRECTING", "true");
+								localStorage.setItem(FIREBASE_REDIRECT, "true");
 								signInWithRedirect(getAuth(), new FacebookAuthProvider());
 							}}
 						></LoginButtons>

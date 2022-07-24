@@ -73,7 +73,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 function Play(props: Puzzle) {
 	const [isPaused, setIsPaused] = useState(false);
 
-	let title = `WebSudoku | Play ${props.name} by ${props.author}`;
+	let title = `${process.env.NEXT_PUBLIC_NAME} | Play ${props.name} by ${props.author}`;
 
 	if (!props.board) return <p>Puzzle does not exist. Redirecting...</p>;
 
