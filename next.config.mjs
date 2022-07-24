@@ -5,14 +5,10 @@ import withPWA from "next-pwa";
  */
 const nextConfig = {
 	reactStrictMode: false,
-	i18n: {
-		locales: ["en"],
-		defaultLocale: "en",
-	},
 	images: {
 		domains: ["www.gstatic.com"],
 	},
-	redirects: async function () {
+	async redirects() {
 		return [
 			{
 				source: "/play",
@@ -29,7 +25,7 @@ const nextConfig = {
 };
 
 export default withPWA({
-	nextConfig,
+	...nextConfig,
 	pwa: {
 		dest: "public",
 		register: true,

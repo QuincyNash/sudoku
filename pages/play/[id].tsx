@@ -81,7 +81,6 @@ function Play(props: Puzzle) {
 
 	onAuthStateChanged(getAuth(), (user) => {
 		console.log(user);
-		signOut(getAuth());
 	});
 
 	return (
