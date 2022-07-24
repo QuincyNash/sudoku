@@ -37,7 +37,7 @@ export default function SignUp() {
 
 			const result = await getRedirectResult(auth);
 			if (result?.user) {
-				const res = await fetch("api/provider-signup", {
+				const res = await fetch("/api/provider-signup", {
 					method: "POST",
 					body: await result.user.getIdToken(),
 				});

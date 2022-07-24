@@ -1,8 +1,16 @@
-import { UserInfo } from "../pages/api/provider-signup";
+import { UserRecord } from "firebase-admin/lib/auth/user-record";
 
-const user: UserInfo = {
-	pro: false,
-	darkmode: true,
-};
+export interface UserInfo {
+	username: string;
+	pro: boolean;
+	darkmode: boolean;
+}
 
-export default user;
+export default function getUser(record: UserRecord) {
+	const user: UserInfo = {
+		username: record.displayName as string,
+		pro: false,
+		darkmode: true,
+	};
+	return user;
+}

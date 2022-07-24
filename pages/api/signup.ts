@@ -10,11 +10,6 @@ interface SignupForm {
 	password: string;
 }
 
-export interface UserInfo {
-	pro: boolean;
-	darkmode: boolean;
-}
-
 const usernameValidator = /^[a-zA-Z0-9_-]{3,20}$/;
 const passwordValidator =
 	/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,48}$/;
