@@ -29,9 +29,12 @@ module.exports = {
 				"controls-lg": "var(--controls-lg-height)",
 			},
 			colors: {
-				"modal-light": "rgba(60, 60, 60, 0.3)",
+				"modal-light": "rgba(0, 0, 0, 0.3)",
 				"modal-dark": "rgba(60, 60, 60, 0.7)",
 				"form-red": "#d93025",
+				"form-light": "#f8f9fd",
+				"cell-error": "rgba(179, 58, 58, 0.5)",
+				cage: "rgba(0, 126, 255, 0.7)",
 				primary: {
 					100: "#24FF62",
 					200: "#20E658",
@@ -72,7 +75,6 @@ module.exports = {
 			},
 		},
 	},
-	safelist: ["order-1", "order-2"],
 	plugins: [
 		plugin(function ({ addVariant }) {
 			addVariant("hover-focus", ["&:hover", "&:focus-visible"]);

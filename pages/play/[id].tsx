@@ -14,6 +14,17 @@ export interface Puzzle {
 	rowBlock: number;
 	colBlock: number;
 	board: number[];
+	solution: number[];
+	name: string;
+	author: string;
+}
+
+interface PlayProps {
+	rows: number;
+	cols: number;
+	rowBlock: number;
+	colBlock: number;
+	board: number[];
 	name: string;
 	author: string;
 }
@@ -49,7 +60,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 			board: data.board,
 			name: data.name,
 			author: data.author,
-		} as Puzzle,
+		} as PlayProps,
 	};
 };
 
@@ -70,7 +81,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 	};
 };
 
-function Play(props: Puzzle) {
+function Play(props: PlayProps) {
 	const [isPaused, setIsPaused] = useState(false);
 
 	let title = `${process.env.NEXT_PUBLIC_NAME} | Play ${props.name} by ${props.author}`;

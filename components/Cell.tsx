@@ -37,6 +37,7 @@ interface CellProps {
 	index: number;
 	sides: SelectedSides;
 	selected: boolean;
+	error: boolean;
 	given: boolean;
 	dragging: boolean;
 	shifted: boolean;
@@ -94,9 +95,7 @@ function Cell(props: CellProps) {
 	return (
 		<button
 			aria-label={`Cell #${props.index + 1}`}
-			data-x={x}
-			data-y={y}
-			className="relative border outline-none cell flex-center border-primary-800 dark:border-slate-500"
+			className="cell flex-center border-primary-800 dark:border-slate-500 relative border outline-none"
 			style={{
 				borderWidth: getBorderWidth(props),
 			}}
@@ -104,7 +103,7 @@ function Cell(props: CellProps) {
 			onDoubleClick={props.onDoubleClick}
 		>
 			<div
-				className="absolute z-50 w-4/5 h-4/5"
+				className="h-4/5 absolute z-[100] w-4/5"
 				onMouseEnter={() => {
 					if (props.dragging) {
 						props.onDrag();
@@ -125,7 +124,7 @@ function Cell(props: CellProps) {
 				""
 			)}
 			{corners.length > 0 && props.value === 10 ? (
-				<div className="absolute z-30 w-full h-full grid grid-cols-3 grid-rows-3">
+				<div className="absolute z-30 grid w-full h-full grid-cols-3 grid-rows-3">
 					{Array.from({ length: 9 }).map((_e, i) => {
 						return (
 							<span
@@ -154,7 +153,7 @@ function Cell(props: CellProps) {
 			)}
 			{center.length > 0 && props.value === 10 ? (
 				<div
-					className={`absolute w-full h-full flex-center text-primary-400 ${
+					className={`absolute w-full h-full flex-center z-20 text-primary-400 ${
 						textSizing[center.length - 1]
 					} z-20`}
 				>
@@ -167,56 +166,56 @@ function Cell(props: CellProps) {
 				<div className="absolute z-10 flex flex-col w-full h-full">
 					<div className="w-full h-[calc(var(--grid-sm-width)*0.015)] flex md:h-[calc(var(--grid-lg-width)*0.015)]">
 						<div
-							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
+							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] ${
 								highlights.top || highlights.left || highlights.topLeft
-									? "bg-opacity-100"
-									: "bg-opacity-0"
+									? "bg-cage"
+									: "bg-transparent"
 							}`}
 						></div>
 						<div
-							className={`flex-grow h-full bg-secondary-200 ${
-								highlights.top ? "bg-opacity-100" : "bg-opacity-0"
+							className={`flex-grow h-full ${
+								highlights.top ? "bg-cage" : "bg-transparent"
 							}`}
 						></div>
 						<div
-							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
+							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] ${
 								highlights.top || highlights.right || highlights.topRight
-									? "bg-opacity-100"
-									: "bg-opacity-0"
+									? "bg-cage"
+									: "bg-transparent"
 							}`}
 						></div>
 					</div>
 					<div className="flex flex-grow w-full">
 						<div
-							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
-								highlights.left ? "bg-opacity-100" : "bg-opacity-0"
+							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] ${
+								highlights.left ? "bg-cage" : "bg-transparent"
 							}`}
 						></div>
 						<div className="flex-grow h-full"></div>
 						<div
-							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
-								highlights.right ? "bg-opacity-100" : "bg-opacity-0"
+							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] ${
+								highlights.right ? "bg-cage" : "bg-transparent"
 							}`}
 						></div>
 					</div>
 					<div className="w-full h-[calc(var(--grid-sm-width)*0.015)] flex md:h-[calc(var(--grid-lg-width)*0.015)]">
 						<div
-							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
+							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] ${
 								highlights.bottom || highlights.left || highlights.bottomLeft
-									? "bg-opacity-100"
-									: "bg-opacity-0"
+									? "bg-cage"
+									: "bg-transparent"
 							}`}
 						></div>
 						<div
-							className={`flex-grow h-full bg-secondary-200 ${
-								highlights.bottom ? "bg-opacity-100" : "bg-opacity-0"
+							className={`flex-grow h-full ${
+								highlights.bottom ? "bg-cage" : "bg-transparent"
 							}`}
 						></div>
 						<div
-							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] bg-secondary-200 ${
+							className={`w-[calc(var(--grid-sm-width)*0.015)] h-full md:w-[calc(var(--grid-lg-width)*0.015)] ${
 								highlights.bottom || highlights.right || highlights.bottomRight
-									? "bg-opacity-100"
-									: "bg-opacity-0"
+									? "bg-cage"
+									: "bg-transparent"
 							}`}
 						></div>
 					</div>
@@ -238,6 +237,11 @@ function Cell(props: CellProps) {
 						].join()})`,
 					}}
 				></div>
+			) : (
+				""
+			)}
+			{props.error ? (
+				<div className="bg-cell-error absolute z-50 w-full h-full"></div>
 			) : (
 				""
 			)}

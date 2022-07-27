@@ -181,7 +181,7 @@ export default function Form(props: FormProps) {
 				return (
 					<div
 						key={i}
-						className="relative w-full p-2 rounded-lg border border-gray-100 bg-[#f8f9fd] h-fit"
+						className="bg-form-light h-fit relative w-full p-2 border border-gray-100 rounded-lg"
 					>
 						<input
 							id={field.id}

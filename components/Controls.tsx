@@ -26,8 +26,6 @@ interface ControlsProps {
 }
 
 function Controls(props: ControlsProps) {
-	console.log(props.showModal);
-
 	return (
 		<>
 			<div
@@ -250,35 +248,41 @@ function Controls(props: ControlsProps) {
 							onClick={() => props.changeTool("color")}
 						>
 							<svg viewBox="0 0 24 24" fill="currentColor">
-								<g stroke="#0003" strokeWidth="0.3">
+								<g className="opacity-70" stroke="#0005" strokeWidth="0.3">
 									<path
-										fill="#e6e6e6"
+										fill={props.allColors[1]}
 										d="m12 12 3.36-7.2h3.84v3.84l-7.2 3.36"
 									></path>
 									<path
-										fill="#b0b0b0"
+										fill={props.allColors[2]}
 										d="m12 12 7.2-3.36v5.29l-7.2-1.93"
 									></path>
 									<path
-										fill="#505050"
+										fill={props.allColors[3]}
 										d="m12 12 7.2 1.93v5.27h-2.16l-5.04-7.2"
 									></path>
 									<path
-										fill="#d1efa5"
+										fill={props.allColors[4]}
 										d="m12 12 5.04 7.2h-5.67l0.63-7.2"
 									></path>
-									<path fill="#f1b0f6" d="m12 12-0.63 7.2h-6.57l7.2-7.2"></path>
-									<path fill="#f3b48f" d="m12 12-7.2 7.2v-6.57l7.2-0.63"></path>
 									<path
-										fill="#f39390"
+										fill={props.allColors[5]}
+										d="m12 12-0.63 7.2h-6.57l7.2-7.2"
+									></path>
+									<path
+										fill={props.allColors[6]}
+										d="m12 12-7.2 7.2v-6.57l7.2-0.63"
+									></path>
+									<path
+										fill={props.allColors[7]}
 										d="m12 12-7.2 0.63v-5.67l7.2 5.04"
 									></path>
 									<path
-										fill="#fae799"
+										fill={props.allColors[8]}
 										d="m12 12-7.2-5.04v-2.16h5.27l1.93 7.2"
 									></path>
 									<path
-										fill="#8ac1f9"
+										fill={props.allColors[9]}
 										d="m12 12-1.93-7.2h5.29l-3.36 7.2"
 									></path>
 								</g>

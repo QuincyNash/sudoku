@@ -34,7 +34,8 @@ export default function SignUp() {
 			const auth = getAuth();
 
 			const result = await getRedirectResult(auth);
-			if (result) {
+
+			if (result?.user) {
 				const res = await fetch("/api/provider-signup", {
 					method: "POST",
 					body: await result.user.getIdToken(),
@@ -44,12 +45,15 @@ export default function SignUp() {
 				localStorage.removeItem(FIREBASE_REDIRECT);
 
 				if (message === "Success") {
-					router.push("/play/1");
+					router.push("/play/1", undefined, { shallow: true });
 				} else {
 					await signOut(auth);
 					setLoading(false);
 					setError("Something went wrong. Please try again later.");
 				}
+			} else {
+				setLoading(false);
+				localStorage.removeItem(FIREBASE_REDIRECT);
 			}
 		})();
 	});
@@ -69,7 +73,7 @@ export default function SignUp() {
 
 			<Loader visible={loading}></Loader>
 
-			<div className="w-screen h-screen overflow-auto flex justify-center bg-[#f8f9fd]">
+			<div className="bg-form-light flex justify-center w-screen h-screen overflow-auto">
 				<div className="w-[calc(100%-2rem)] max-w-[600px] h-fit p-[clamp(24px,25vw-135px,48px)] my-auto pt-12 bg-white rounded-lg shadow-md">
 					<h1
 						className="font-courgette mb-4 text-4xl text-center"
@@ -177,7 +181,7 @@ export default function SignUp() {
 										emailElem.value,
 										passwordElem.value
 									).then(() => {
-										router.push("/play/1");
+										router.push("/play/1", undefined, { shallow: true });
 									});
 								} else {
 									setLoading(false);

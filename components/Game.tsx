@@ -11,6 +11,7 @@ const clone = cloneOptions();
 interface CellObject {
 	selected: boolean;
 	given: boolean;
+	error: boolean;
 	value: number;
 	corners: Set<number>;
 	center: Set<number>;
@@ -31,6 +32,50 @@ interface GameProps {
 	board: number[];
 	name: string;
 	author: string;
+}
+
+function calculateErrors(
+	cells: CellObject[][],
+	colBlock: number,
+	rowBlock: number
+) {
+	const applyErrors = (row: CellObject[]) => {
+		let notEmpty = row.filter((cell) => cell.value !== 10);
+		let nums = notEmpty.map((cell) => cell.value);
+
+		let repeats = nums.filter((e, i, a) => a.indexOf(e) !== i);
+		row.forEach((cell) => {
+			if (repeats.includes(cell.value)) {
+				cell.error = true;
+			}
+		});
+	};
+
+	let newCells = clone(cells);
+	newCells.map((row) => {
+		row.map((cell) => {
+			cell.error = false;
+		});
+	});
+
+	newCells.forEach((row) => {
+		applyErrors(row);
+	});
+	newCells.forEach((_e, i) => {
+		applyErrors(newCells.map((row) => row[i]));
+	});
+	for (let y = 0; y < newCells.length; y += rowBlock) {
+		for (let x = 0; x < newCells[y].length; x += colBlock) {
+			applyErrors(
+				newCells
+					.slice(y, y + rowBlock)
+					.map((row) => row.slice(x, x + colBlock))
+					.flat()
+			);
+		}
+	}
+
+	return newCells;
 }
 
 function Game(props: GameProps) {
@@ -57,6 +102,7 @@ function Game(props: GameProps) {
 			let cell = board[y * props.cols + x];
 			row.push({
 				selected: false,
+				error: false,
 				given: cell !== 0,
 				value: cell === 0 ? 10 : cell,
 				corners: new Set(),
@@ -228,6 +274,8 @@ function Game(props: GameProps) {
 						) {
 							if (t === "num" && num !== 10) {
 								newCells[ypos][xpos].value = num;
+
+								newCells = calculateErrors(newCells, colBlock, rowBlock);
 							} else if (num !== 10) {
 								let set: Set<number>;
 								if (t === "corner" && newCells[ypos][xpos].value === 10) {
@@ -249,6 +297,7 @@ function Game(props: GameProps) {
 							} else {
 								if (deleting === "num") {
 									newCells[ypos][xpos].value = 10;
+									newCells = calculateErrors(newCells, colBlock, rowBlock);
 								} else if (deleting === "corner") {
 									newCells[ypos][xpos].corners = new Set();
 								} else if (deleting === "center") {
@@ -263,7 +312,7 @@ function Game(props: GameProps) {
 				saveCells(newCells);
 			}
 		},
-		[cells, cols, getTool, rows, saveCells]
+		[cells, colBlock, cols, getTool, rowBlock, rows, saveCells]
 	);
 
 	useEffect(() => {
@@ -303,6 +352,7 @@ function Game(props: GameProps) {
 					parseInt(target.dataset.x as string),
 					parseInt(target.dataset.y as string),
 				];
+				console.log(x, y);
 				if (!cells[y][x].selected) {
 					setDragRemove(true);
 				} else {
@@ -340,7 +390,8 @@ function Game(props: GameProps) {
 			if (showModal) return;
 
 			if (e.key === "Tab") {
-				let newIndex = activeY * cols + activeX + (e.shiftKey ? -1 : 1);
+				let newIndex =
+					activeY * cols + activeX + (e.altKey || e.shiftKey ? -1 : 1);
 				newIndex = (newIndex + rows * cols) % (rows * cols);
 				let newX = newIndex % cols;
 				let newY = Math.floor(newIndex / cols);
@@ -475,6 +526,7 @@ function Game(props: GameProps) {
 							key={i}
 							index={i}
 							selected={cells[y][x].selected}
+							error={cells[y][x].error}
 							sides={{
 								top: y > 0 ? cells[y - 1][x].selected : false,
 								bottom: y < rows - 1 ? cells[y + 1][x].selected : false,
