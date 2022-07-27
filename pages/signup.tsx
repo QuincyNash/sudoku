@@ -45,7 +45,7 @@ export default function SignUp() {
 				localStorage.removeItem(FIREBASE_REDIRECT);
 
 				if (message === "Success") {
-					router.push("/play/1", undefined, { shallow: true });
+					router.push("/play/1");
 				} else {
 					await signOut(auth);
 					setLoading(false);
@@ -181,7 +181,7 @@ export default function SignUp() {
 										emailElem.value,
 										passwordElem.value
 									).then(() => {
-										router.push("/play/1", undefined, { shallow: true });
+										router.push("/play/1");
 									});
 								} else {
 									setLoading(false);

@@ -47,7 +47,7 @@ export default function SignUp() {
 				localStorage.removeItem(FIREBASE_REDIRECT);
 
 				if (message === "Success") {
-					router.push("/play/1", undefined, { shallow: true });
+					router.push("/play/1");
 				} else {
 					setLoading(false);
 					setError("Something went wrong. Please try again later.");
@@ -138,7 +138,7 @@ export default function SignUp() {
 							)
 								.then((result) => {
 									if (result.user) {
-										router.push("/play/1", undefined, { shallow: true });
+										router.push("/play/1");
 									} else {
 										setLoading(false);
 										setError("Something went wrong. Please try again later");
